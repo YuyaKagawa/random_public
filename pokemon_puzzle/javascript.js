@@ -3,7 +3,10 @@ var ccolor_gs = "darkblue"; // canvasの格子の枠線の色
 var ccolor_gb = "white"; // canvasの格子の背景の色
 var ccolor_fd = "black"; // canvas内のデフォルトの文字の色
 var targetFlag = false; // trueでマウスが要素に乗っているとみなす
-var rect = null;
+// var rect = null;
+// var context = null;
+
+
 
 function get_csv(fname_csv){
     // csvを読み込んだ結果を取得する関数
@@ -79,57 +82,118 @@ function draw_grid(args,G){
     });
 }
 
+// function declare_moveaction(){
+//     // moveactionを宣言するだけの関数
 
-function when_mmove(e){
-    // マウスが動いているときの関数
+//     return new Promise(function (resolve,reject){
+//         var moveaction={
+//             // whenmmove()内で宣言すると、下のoutが複数回実行されてしまう
+        
+//             timer:null,
+//             // targetFlagの更新
+//             updateTargetFlag: function(e){
+//                 targetFlag = ((e.clientX<500)&&(e.clientY<500));
+//             },
+//             // 連続イベントの間引き
+//             throttle: function(targetFunc,time){
+//                 var _time = time || 100;
+//                 clearTimeout(this.timer);
+//                 this.timer = setTimeout(function (){
+//                     targetFunc();
+//                 },_time);
+//             },
+//             over: function(){ 
+//                 // targetFlag==Trueの範囲でマウスカーソルを動かし終わったときに実行
+//                 console.log("over throttle!");
+//                 // context.fillStyle="blue";
+//                 // context.fillRect(e.clientX,e.clientY,10,10); // マウスのある位置に四角を表示できたらいいな
+//             },
+        
+//             out: function(){ // 
+//                 // targetFlag==Falseの範囲でマウスカーソルを動かし終わったときに実行
+//                 console.log("out throttle!");
+//             },
+//         };
+
+//         resolve();
+//     });
+// }
+
+
+var moveaction={
+    // whenmmove()内で宣言すると、下のoutが複数回実行されてしまう
+
+    timer:null,
+    // targetFlagの更新
+    updateTargetFlag: function(e){
+        targetFlag = ((e.clientX<500)&&(e.clientY<500));
+    },
+    // 連続イベントの間引き
+    throttle: function(targetFunc,time){
+        var _time = time || 100;
+        clearTimeout(this.timer);
+        this.timer = setTimeout(function (){
+            targetFunc();
+        },_time);
+    },
+    over: function(){ 
+        // targetFlag==Trueの範囲でマウスカーソルを動かし終わったときに実行
+        console.log("over throttle!");
+        // context.fillStyle="blue";
+        // canvas;
+        context.fillRect(e.clientX,e.clientY,10,10); // マウスのある位置に四角を表示できたらいいな
+    },
+
+    out: function(){ // 
+        // targetFlag==Falseの範囲でマウスカーソルを動かし終わったときに実行
+        console.log("out throttle!");
+    },
+};
+
+
+
+function when_mmove(e,context){
+    // マウスがキャンバス内で動いているときの関数
     console.log("mouse moving!");
+    console.log(`e.clientX = ${e.clientX}`)
+    console.log(`e.clientY = ${e.clientY}`)
 
-    var moveactions={
-        timer:null,
-        // targetFlagの更新
-        updateTargetFlag: function(e){
-            targetFlag = ((e.clientX<10)&&(e.clientY<10));
-        },
-        // 連続イベントの間引き
-        throttle: function(targetFunc,time){
-            var _time = time || 100;
-            clearTimeout(this.timer);
-            this.timer = setTimeout(function (){
-                targetFunc();
-            },_time);
-        },
-        out: function(){
-            console.log("off throttle!");
-        },
-        over: function(){
-            console.log("on throttle!");
-        }
-    };
+    // マウスが動くたびに、要素上に乗っているかどうかをチェック
+    moveaction.updateTargetFlag(e);
+
+    // 実行する関数には、間引きを噛ませる
+    if (targetFlag){
+        moveaction.throttle(moveaction.over,50);
+    }
+    else{
+        moveaction.throttle(moveaction.out,50);
+    }
 }
 
 
-function event_mover(canvas,context){
-    // マウスオーバーのイベントを登録する関数
-    function when_mover(e){
-        console.log("on!");
-        context.fillStyle="blue";
-        context.fillRect(10,10,100,100);
+function event_min(canvas,context){
+    // 範囲外から範囲内に入ったときのイベントを登録する関数
 
-        rect = e.target.getBoundingClientRect(); // 長方形
+    function when_min(e){
+        console.log("when_min");
+    
+        // rect = e.target.getBoundingClientRect(); // 長方形
         canvas.addEventListener("mousemove",when_mmove,false); // マウスが動いているとき
     }
 
     return new Promise(function (resolve,reject){
-        canvas.addEventListener("mouseover",when_mover,false);
+        canvas.addEventListener("mouseover",when_min,false);
         resolve();
     });
 }
 
 function event_mout(canvas,context){
     // マウスアウトのイベントを登録する関数
+
     function when_mout(){
-        console.log("off!");        
-        context.clearRect(10,10,100,100);
+        console.log("when_mout");
+        // console.log("off!");        
+        // context.clearRect(10,10,100,100);
         canvas.removeEventListener("mousemove",when_mmove,false); // マウスが動いているとき
     }
 
@@ -145,7 +209,7 @@ function event(args){
     var context=args["context"];
 
     return Promise.all([
-        event_mover(canvas,context),
+        event_min(canvas,context),
         event_mout(canvas,context)
     ]);
 }
@@ -168,14 +232,14 @@ window.onload = function(){
     // 2. csvを読み込む
     // 3. csvの内容に基づいて、格子を表示
 
-
     p=Promise.resolve().then(prep_canvas_main.bind(this,canvas,context))
     // .then(get_csv.bind(this,fname_a))
     .then(get_csv.bind(this,fname_d))    
     .then(draw_grid.bind(this,{"context":context,"gw":gw,"gh":gh}))
+    // .then(declare_moveaction)
     .then(event.bind(this,{"canvas":canvas,"context":context}));
 
-
+    
 
 
 
