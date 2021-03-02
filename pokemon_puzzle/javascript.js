@@ -3,10 +3,15 @@ var ccolor_gs = "darkblue"; // canvasの格子の枠線の色
 var ccolor_gb = "white"; // canvasの格子の背景の色
 var ccolor_fd = "black"; // canvas内のデフォルトの文字の色
 var targetFlag = false; // trueでマウスが要素に乗っているとみなす
-// var rect = null;
-// var context = null;
+var sw = null; // 格子の中の一つの四角の横幅
+var sh = null; // 格子の中の一つの四角の縦幅
+var cw = null; // canvasの横幅
+var ch = null; // canvasの縦幅
 
-
+var G = null; // 格子の情報
+var c_mar = 10; // canvas上の端（上下左右）のマージン
+var i_p = null; // 前回指した四角はi行目
+var j_p = null; // 前回指した四角はj列目
 
 function get_csv(fname_csv){
     // csvを読み込んだ結果を取得する関数
@@ -20,7 +25,7 @@ function get_csv(fname_csv){
             result[i]=tmp[i].split(",");
         }
     
-        return result
+        return result;
     }    
 
     return new Promise(function(resolve,reject){
@@ -30,6 +35,7 @@ function get_csv(fname_csv){
 
         request.onload = function(){
             result = split_csv(request.responseText);
+            G=result;
             resolve(result);
         };
     });
@@ -49,32 +55,95 @@ function prep_canvas_main(canvas,context){
     });    
 }
 
+function draw_sq_byij(context,i,j,ccolor_gb="white"){
+    // i行j列目という情報が与えられたときの、i行j列目の四角を描く関数
+
+    if ((G[i][j]=="\u{3000}")||(G[i][j]==" ")){ // 全角空白は、枠を表示しない
+    }
+    else{ // 全角空白以外のとき、枠を表示
+        context.strokeStyle=ccolor_gs;
+        context.strokeRect(c_mar+j*sh,c_mar+i*sw,sh,sw);
+        context.fillStyle=ccolor_gb; // 枠があるときの背景色
+        context.fillRect(c_mar+j*sh,c_mar+i*sw,sh,sw);
+
+        if (G[i][j]=="\u{25EF}") { // ◯の場合は、もうなにもしない
+        }
+        else{ // 文字の場合は、文字を表示
+            context.font = `${sh}px serif`;
+            context.fillStyle=ccolor_fd;                    
+            context.fillText(G[i][j],c_mar+j*sh,c_mar+i*sw);
+        }
+    }
+}
+
+function xy2sq_ij(x,y){
+    // x,yを受け取り、i,jに変換する
+    // x,yからi行j列目という情報を抽出して返す
+    // x,yが範囲外の場合、i,jはそれぞれnullを返す
+    
+    var i,j;
+
+    if (x<c_mar || x>=cw-c_mar){ // xが格子の範囲外の場合
+        j=null;
+    }else{
+        j = Math.floor((x-c_mar)/sw);
+    }
+
+    if (y<c_mar || y>=ch-c_mar){ // yが格子の範囲外の場合
+        i=null;
+    }else{
+        i = Math.floor((y-c_mar)/sh);
+    }
+
+    return [i,j];
+}
+
+function change_sq_mover(context,x,y){
+    // マウスがオーバーしている四角の属性を、変化させる
+    // canvas上でのx,y座標を与えることで、その部分の四角を再描画する関数
+    // 条件分岐は2つ
+    // 1. 以前のx,yが格子の範囲の内にある場合
+    // 2. 現在のx,yが格子の範囲の内にある場合
+         
+    var ij=xy2sq_ij(x,y);
+    var i=ij[0];
+    var j=ij[1];
+
+    if (i_p!=null && j_p!=null){
+        // 1. 以前のx,yが格子の範囲の内にあるとき
+
+        if ((i==i_p) && (j==j_p)){ // 以前と同じ四角を指している場合、何もしない
+        }
+        else if ((i!=i_p) || (j!=j_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
+            draw_sq_byij(context,i_p,j_p,ccolor_gb="white");
+        }
+    }
+
+    if (i!=null && j!=null){
+        // 2. 現在のx,yが格子の範囲の内にある場合
+
+        if ((i==i_p) && (j==j_p)){ // 以前と同じ四角を指している場合、何もしない
+        }
+        else if ((i!=null && i!=i_p) || (j!=null && j!=j_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
+            draw_sq_byij(context,i,j,ccolor_gb="orange");
+        }
+    }
+
+    i_p=i;
+    j_p=j;
+}
+
 function draw_grid(args,G){
     // canvas上に格子を描く関数
-    var gw=args["gw"]; // 格子の幅
-    var gh=args["gh"]; // 格子の高さ
+    var sw=args["sw"]; // 格子の幅
+    var sh=args["sh"]; // 格子の高さ
     var context=args["context"]; // context
 
     return new Promise(function (resolve,reject){
         // 枠線の描画
         for (let i=0;i<32;i++){
             for (let j=0;j<32;j++) {
-                if ((G[i][j]=="\u{3000}")||(G[i][j]==" ")){ // 全角空白は、枠を表示しない
-                }
-                else{ // 全角空白以外のとき、枠を表示
-                    context.strokeStyle=ccolor_gs;
-                    context.strokeRect(10+j*gh,10+i*gw,gh,gw);
-                    context.fillStyle=ccolor_gb;
-                    context.fillRect(10+j*gh,10+i*gw,gh,gw);
-
-                    if (G[i][j]=="\u{25EF}") { // ◯の場合は、もうなにもしない
-                    }
-                    else{ // 文字の場合は、文字を表示
-                        context.font = `${gh}px serif`;
-                        context.fillStyle=ccolor_fd;                    
-                        context.fillText(G[i][j],10+j*gh,10+i*gw);
-                    }
-                }
+                draw_sq_byij(context,i,j); // 四角を描く
             }
         }
 
@@ -82,148 +151,62 @@ function draw_grid(args,G){
     });
 }
 
-// function declare_moveaction(){
-//     // moveactionを宣言するだけの関数
-
-//     return new Promise(function (resolve,reject){
-//         var moveaction={
-//             // whenmmove()内で宣言すると、下のoutが複数回実行されてしまう
-        
-//             timer:null,
-//             // targetFlagの更新
-//             updateTargetFlag: function(e){
-//                 targetFlag = ((e.clientX<500)&&(e.clientY<500));
-//             },
-//             // 連続イベントの間引き
-//             throttle: function(targetFunc,time){
-//                 var _time = time || 100;
-//                 clearTimeout(this.timer);
-//                 this.timer = setTimeout(function (){
-//                     targetFunc();
-//                 },_time);
-//             },
-//             over: function(){ 
-//                 // targetFlag==Trueの範囲でマウスカーソルを動かし終わったときに実行
-//                 console.log("over throttle!");
-//                 // context.fillStyle="blue";
-//                 // context.fillRect(e.clientX,e.clientY,10,10); // マウスのある位置に四角を表示できたらいいな
-//             },
-        
-//             out: function(){ // 
-//                 // targetFlag==Falseの範囲でマウスカーソルを動かし終わったときに実行
-//                 console.log("out throttle!");
-//             },
-//         };
-
-//         resolve();
-//     });
-// }
-
-
-var moveaction={
-    // whenmmove()内で宣言すると、下のoutが複数回実行されてしまう
-
-    timer:null,
-    // targetFlagの更新
-    updateTargetFlag: function(e){
-        targetFlag = ((e.clientX<500)&&(e.clientY<500));
-    },
-    // 連続イベントの間引き
-    throttle: function(targetFunc,time){
-        var _time = time || 100;
-        clearTimeout(this.timer);
-        this.timer = setTimeout(function (){
-            targetFunc();
-        },_time);
-    },
-    over: function(){ 
-        // targetFlag==Trueの範囲でマウスカーソルを動かし終わったときに実行
-        console.log("over throttle!");
-        // context.fillStyle="blue";
-        // canvas;
-        context.fillRect(e.clientX,e.clientY,10,10); // マウスのある位置に四角を表示できたらいいな
-    },
-
-    out: function(){ // 
-        // targetFlag==Falseの範囲でマウスカーソルを動かし終わったときに実行
-        console.log("out throttle!");
-    },
-};
-
-
-
-function when_mmove(e,context){
-    // マウスがキャンバス内で動いているときの関数
-    console.log("mouse moving!");
-    console.log(`e.clientX = ${e.clientX}`)
-    console.log(`e.clientY = ${e.clientY}`)
-
-    // マウスが動くたびに、要素上に乗っているかどうかをチェック
-    moveaction.updateTargetFlag(e);
-
-    // 実行する関数には、間引きを噛ませる
-    if (targetFlag){
-        moveaction.throttle(moveaction.over,50);
-    }
-    else{
-        moveaction.throttle(moveaction.out,50);
-    }
+function when_mmove(e,canvas,context){
+    // canvas内でマウスが動いているとき
+    // 厳密には、canvas外→内、canvas内→外の動作も取る
+    change_sq_mover(context,e.offsetX,e.offsetY); // 四角を描画する
 }
 
+function when_click(e){
+    // canvas内でクリックしたとき
+    var tb = document.getElementById("textbox"); // html内に記述したテキストボックスの要素を取得
+    // console.log(tb);
 
-function event_min(canvas,context){
-    // 範囲外から範囲内に入ったときのイベントを登録する関数
+    var ij = xy2sq_ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
+    var i = ij[0];
+    var j = ij[1];
 
-    function when_min(e){
-        console.log("when_min");
-    
-        // rect = e.target.getBoundingClientRect(); // 長方形
-        canvas.addEventListener("mousemove",when_mmove,false); // マウスが動いているとき
+    if (i==null || j==null){ // 格子外をクリックしたとき
+        tb.innerHTML = `<input type='text' value=' ' size=1>`;
     }
+    else{ // 格子内をクリックしたとき
+        tb.innerHTML = `<input type='text' value='${G[i][j]}' size=6>`;
+    }
+    // tb.setAttribute("type","text");
+}
 
-    return new Promise(function (resolve,reject){
-        canvas.addEventListener("mouseover",when_min,false);
-        resolve();
+function res_event(args){
+    // イベントの登録をする関数
+
+    return new Promise(function(resolve,reject){
+        var canvas = args["canvas"];
+        var context = args["context"];
+
+        canvas.addEventListener("mousemove",e=>{
+            when_mmove(e,canvas,context);
+        },false);
+
+        canvas.addEventListener("click",e=>{
+            when_click(e);
+        },false);
     });
 }
 
-function event_mout(canvas,context){
-    // マウスアウトのイベントを登録する関数
 
-    function when_mout(){
-        console.log("when_mout");
-        // console.log("off!");        
-        // context.clearRect(10,10,100,100);
-        canvas.removeEventListener("mousemove",when_mmove,false); // マウスが動いているとき
-    }
-
-    return new Promise(function (resolve,reject){
-        canvas.addEventListener("mouseout",when_mout,false);
-        resolve();
-    });
-}
-
-function event(args){
-    // 複数のイベントを並列で実行する関数
-    var canvas=args["canvas"];
-    var context=args["context"];
-
-    return Promise.all([
-        event_min(canvas,context),
-        event_mout(canvas,context)
-    ]);
-}
-
-window.onload = function(){
+window.onload = function(){    
     // ウィンドウのロード時に行うこと
     var canvas = document.getElementById("canvas_main");
     var context = canvas.getContext("2d");
 
-
-    // 格子の縦・横幅
-    var gw = (canvas.width-20)/32;
-    var gh = (canvas.height-20)/32;
+    // canvasの縦・横幅
+    cw = (canvas.width);
+    ch = (canvas.height);
     
+    // 格子の一つの四角の縦・横幅
+    sw = (canvas.width-2*c_mar)/32;
+    sh = (canvas.height-2*c_mar)/32;
+    
+
     var fname_d="./data/csv/default_sq.csv"; // csvファイル名、最初の状態
     // var fname_a="./data/csv/answer_sq.csv"; // csvファイル名、答え
     
@@ -235,11 +218,11 @@ window.onload = function(){
     p=Promise.resolve().then(prep_canvas_main.bind(this,canvas,context))
     // .then(get_csv.bind(this,fname_a))
     .then(get_csv.bind(this,fname_d))    
-    .then(draw_grid.bind(this,{"context":context,"gw":gw,"gh":gh}))
-    // .then(declare_moveaction)
-    .then(event.bind(this,{"canvas":canvas,"context":context}));
+    .then(draw_grid.bind(this,{"context":context,"sw":sw,"sh":sh}))
+    .then(res_event.bind(this,{"canvas":canvas,"context":context}));
 
     
+}
 
 
 
@@ -251,6 +234,54 @@ window.onload = function(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // canvas.addEventListener("mouseover",function(e){
+            // console.log("mousemove!");
+
+
+
+// console.log(`canvas.width = ${canvas.width}`);
+    // console.log(`canvas.height = ${canvas.height}`);
+    // console.log(`canvas.left = ${canvas.left}`);
+    // console.log(`canvas.top = ${canvas.top}`);
+
+    // console.log(`e.clientX = ${e.clientX}`);
+    // console.log(`e.clientY = ${e.clientY}`);
+
+    // console.log(`e.offsetX = ${e.offsetX}`);
+    // console.log(`e.offsetY = ${e.offsetY}`);
+    
+    // var rect = canvas.getBoundingClientRect();
+
+    // console.log(`rect.width = ${rect.width}`);
+    // console.log(`rect.height = ${rect.height}`);
+    
+    // context.fillStyle="blue";
+    // context.fillRect(e.offsetX,e.offsetY,110,110); // マウスのある位置に四角を表示できたらいいな
+        
+        // console.log("i!=null && j!=null!!!");
+        // console.log(`     i=${i}, j=${j}`);
+
+
+
+
+
+
+    // .then(declare_moveaction)
 
 
 
@@ -302,7 +333,113 @@ window.onload = function(){
                 //     context.fillText(G[i][j],10+j*gh,10+i*gw);
                 // }
 
+    // console.log(`sq_xy2ij(x,y) = ${sq_xy2ij(x,y)}`);
 
+    // console.log(`x=${x}, y=${y}`);
+    // console.log(`i=${i}, j=${j}, i_p=${i_p}, j_p=${j_p}`);
+
+        // console.log("i_p!=null && j_p!=null");
+
+    // if ((x_p>=c_mar && x_p<cw-c_mar)&&(y_p>=c_mar || y_p<ch-c_mar)){
+        // 1. 以前のx,yが格子の範囲の内にあるとき
+        // 以前の格子を元の状態に戻す
+        // console.log(`格子外! x = ${x}, y = ${y}`);
+
+        // x,yからi,jを取得する
+        // var ij = sq_xy2ij(x,y);
+        // var i = ij[0];
+        // var j = ij[1];
+        
+    //     if 
+    //     draw_sq_byij(context,i_p,j_p,ccolor_gb="white");
+
+    //     x_p=null;
+    //     y_p=null;
+    //     i_p=null;
+    //     j_p=null;
+    // }
+
+    // if ((x>=c_mar && x<cw-c_mar)&&(y>=c_mar || y<ch-c_mar)){
+        // console.log(`格子外! x = ${x}, y = ${y}`);
+
+        // x,yからi,jを取得する
+    //     var ij = sq_xy2ij(x,y);
+    //     var i = ij[0];
+    //     var j = ij[1];
+
+    //     if (i!=i_p && j!=j_p){ // 格子が変わった場合のみ、表示
+    //         draw_sq_byij(context,i,j,ccolor_gb="orange");
+    //     }
+
+    //     x_p=x;
+    //     y_p=y;
+    //     i_p=i;
+    //     j_p=j;
+    // }
+
+    // else{
+    //     // x,yの両方が格子の範囲内にあるとき
+    //     console.log(`格子内! x = ${x}, y = ${y}`);
+        
+
+    //     // x,yからi,jを取得する
+    //     var ij = sq_xy2ij(x,y);
+    //     var i = ij[0];
+    //     var j = ij[1];
+        
+    //     if (i!=null && i_p!=null && i!=i_p) && (j!=null && j_p!=null && j!=j_p) { // 格子内→格子内の移動の際
+    //         console.log(`i = ${i}, j = ${j}, i_p = ${i_p}, j_p = ${j_p}`);
+    //     }
+
+    //     x_p=x;
+    //     y_p=y;
+    //     i_p=i;
+    //     j_p=j;
+
+    // }
+
+
+    // console.log(`x = ${x}, y = ${y}`);
+
+    
+
+    // // マウスカーソルがcanvas内から外にでたときの処理
+    // if ((i_prev!=null && i_prev>=0 && i_prev<32) && (j_prev!=null && j_prev>=0 && j_prev<32) &&
+    // (i==null || i<0 || i>=32) || (j==null || j<0 || j>=32)){
+    //     console.log("");
+
+    //     draw_sq_byij(context,i_prev,j_prev,ccolor_gb="white");
+
+        // console.log(`x out!, j = ${j}`);
+
+    // }
+
+    // else if (i>=0 && i<32 && j>=0 && j<32){ // 格子のindexが範囲内の場合、言い換えれば対応する位置に格子がある場合
+    //     // console.log(`change_sq_mover(x,y), x = ${x}, y = ${y}, j = ${j}, i = ${i}, c_mar = ${c_mar}`);
+
+    //     if ((i_prev!=i) || (j_prev!=j)){
+    //         // もし前回と違う場合
+    //         // console.log(`i_prev = ${i_prev}, i = ${i}`);
+    //         // console.log(`j_prev = ${j_prev}, j = ${j}`);
+
+    //         draw_sq_byij(context,i,j,ccolor_gb="orange");
+
+    //         if (i_prev!=null && i_prev!=null){
+    //             draw_sq_byij(context,i_prev,j_prev,ccolor_gb="white");
+    //         }
+            
+    //         i_prev=i;
+    //         j_prev=j;   
+    //     }
+    // }
+    // else{
+    //     i_prev=null;
+    //     j_prev=null;
+    // }
+
+
+
+    // // console.log(`i = ${i}, j = ${j}`);
 
 
                     // console.log("i, j, G[i][j], 文字コード = ",i,j,G[i][j],G[i][j].charCodeAt(0));
@@ -378,7 +515,13 @@ window.onload = function(){
     // }
 
         // var tmp = str.split("%0A");
-        
+        // var rect = null;
+// var context = null;
+
+// var x_p = null; // 前回のx
+// var y_p = null; // 前回のy
+
+
 
         // console.log(`全角スペース = ${"　".charCodeAt(0)}`)
         // console.log(`半角スペース = ${" ".charCodeAt(0)}`)
@@ -394,7 +537,159 @@ window.onload = function(){
         // console.log(`tmp.length = ${tmp.length}`);
         // console.log(`tmp[31] = ${tmp[31]}`);
         // console.log(`tmp[32] = ${tmp[32]}`);
+                    // if ((G[i][j]=="\u{3000}")||(G[i][j]==" ")){ // 全角空白は、枠を表示しない
+                // }
+                // else{ // 全角空白以外のとき、枠を表示
+                //     context.strokeStyle=ccolor_gs;
+                //     context.strokeRect(10+j*gh,10+i*gw,gh,gw);
+                //     context.fillStyle=ccolor_gb;
+                //     context.fillRect(10+j*gh,10+i*gw,gh,gw);
+
+                //     if (G[i][j]=="\u{25EF}") { // ◯の場合は、もうなにもしない
+                //     }
+                //     else{ // 文字の場合は、文字を表示
+                //         context.font = `${gh}px serif`;
+                //         context.fillStyle=ccolor_fd;                    
+                //         context.fillText(G[i][j],10+j*gh,10+i*gw);
+                //     }
+                // }
+
+// function declare_moveaction(){
+//     // moveactionを宣言するだけの関数
+
+//     return new Promise(function (resolve,reject){
+//         var moveaction={
+//             // whenmmove()内で宣言すると、下のoutが複数回実行されてしまう
         
+//             timer:null,
+//             // targetFlagの更新
+//             updateTargetFlag: function(e){
+//                 targetFlag = ((e.clientX<500)&&(e.clientY<500));
+//             },
+//             // 連続イベントの間引き
+//             throttle: function(targetFunc,time){
+//                 var _time = time || 100;
+//                 clearTimeout(this.timer);
+//                 this.timer = setTimeout(function (){
+//                     targetFunc();
+//                 },_time);
+//             },
+//             over: function(){ 
+//                 // targetFlag==Trueの範囲でマウスカーソルを動かし終わったときに実行
+//                 console.log("over throttle!");
+//                 // context.fillStyle="blue";
+//                 // context.fillRect(e.clientX,e.clientY,10,10); // マウスのある位置に四角を表示できたらいいな
+//             },
+        
+//             out: function(){ // 
+//                 // targetFlag==Falseの範囲でマウスカーソルを動かし終わったときに実行
+//                 console.log("out throttle!");
+//             },
+//         };
+
+//         resolve();
+//     });
+// }
+
+    // console.log(`sq_xy2ij is called!`);
+    // console.log(`x = ${x}, y = ${y}`);
+        // console.log(`y out!, i = ${i}`);
+
+
+// var moveaction={
+//     // whenmmove()内で宣言すると、下のoutが複数回実行されてしまう
+
+//     timer:null,
+//     // targetFlagの更新
+//     updateTargetFlag: function(e){
+//         targetFlag = ((e.clientX<500)&&(e.clientY<500));
+//     },
+//     // 連続イベントの間引き
+//     throttle: function(targetFunc,time){
+//         var _time = time || 100;
+//         clearTimeout(this.timer);
+//         this.timer = setTimeout(function (){
+//             targetFunc();
+//         },_time);
+//     },
+//     over: function(){ 
+//         // targetFlag==Trueの範囲でマウスカーソルを動かし終わったときに実行
+//         console.log("over throttle!");
+//         // context.fillStyle="blue";
+//         // canvas;
+//         context.fillRect(e.clientX,e.clientY,10,10); // マウスのある位置に四角を表示できたらいいな
+//     },
+
+//     out: function(){ // 
+//         // targetFlag==Falseの範囲でマウスカーソルを動かし終わったときに実行
+//         console.log("out throttle!");
+//     },
+// };
+
+
+
+// function when_mmove(e,context){
+//     // マウスがキャンバス内で動いているときの関数
+//     console.log("mouse moving!");
+//     console.log(`e.clientX = ${e.clientX}`)
+//     console.log(`e.clientY = ${e.clientY}`)
+
+//     // マウスが動くたびに、要素上に乗っているかどうかをチェック
+//     moveaction.updateTargetFlag(e);
+
+//     // 実行する関数には、間引きを噛ませる
+//     if (targetFlag){
+//         moveaction.throttle(moveaction.over,50);
+//     }
+//     else{
+//         moveaction.throttle(moveaction.out,50);
+//     }
+// }
+
+
+// function event_min(canvas,context){
+//     // 範囲外から範囲内に入ったときのイベントを登録する関数
+
+//     function when_min(e){
+//         console.log("when_min");
+    
+//         // rect = e.target.getBoundingClientRect(); // 長方形
+//         canvas.addEventListener("mousemove",when_mmove,false); // マウスが動いているとき
+//     }
+    // console.log(`draw_sq_byij(), i = ${i}, j = ${j}`);
+
+//     return new Promise(function (resolve,reject){
+//         canvas.addEventListener("mouseover",when_min,false);
+//         resolve();
+//     });
+// }
+
+// function event_mout(canvas,context){
+//     // マウスアウトのイベントを登録する関数
+
+//     function when_mout(){
+//         console.log("when_mout");
+//         // console.log("off!");        
+//         // context.clearRect(10,10,100,100);
+//         canvas.removeEventListener("mousemove",when_mmove,false); // マウスが動いているとき
+//     }
+
+//     return new Promise(function (resolve,reject){
+//         canvas.addEventListener("mouseout",when_mout,false);
+//         resolve();
+//     });
+// }
+
+// function event(args){
+//     // 複数のイベントを並列で実行する関数
+//     var canvas=args["canvas"];
+//     var context=args["context"];
+
+//     return Promise.all([
+//         event_min(canvas,context),
+//         event_mout(canvas,context)
+//     ]);
+// }
 
     // var moveActions ={
     //     // mouseMoveで実行する関数
@@ -523,7 +818,7 @@ window.onload = function(){
     //         y++;
     //     });
     // });
-}
+
 
 // ゴミ置き場
 // console.log(result);
