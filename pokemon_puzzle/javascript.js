@@ -1,21 +1,36 @@
-var ccolor_bg = "gray"; // canvasの背景色
-var ccolor_gs = "darkblue"; // canvasの格子の枠線の色
-var ccolor_gb = "white"; // canvasの格子の背景の色
-var ccolor_fd = "black"; // canvas内のデフォルトの文字の色
-var targetFlag = false; // trueでマウスが要素に乗っているとみなす
-var sw = null; // 格子の中の一つの四角の横幅
-var sh = null; // 格子の中の一つの四角の縦幅
-var cw = null; // canvasの横幅
-var ch = null; // canvasの縦幅
+// 後に値を取得する、canvas関連の変数
+let canvas;
+let context;
+let cw;
+let ch;
+let sw; // 格子の中の一つの四角の横幅
+let sh; // 格子の中の一つの四角の縦幅
+let cmar;
 
-var G = null; // 格子の情報
-// var G = new Object();
+const ccolor_bg = "gray"; // canvasの背景色
+const ccolor_gs = "darkblue"; // canvasの格子の枠線の色
+let ccolor_gb = "white"; // canvasの格子の背景の色
+const ccolor_fd = "black"; // canvas内のデフォルトの文字の色
 
-var c_mar = 10; // canvas上の端（上下左右）のマージン
-var i_p = null; // 前回指した四角はi行目
-var j_p = null; // 前回指した四角はj列目
-var i = null; // 今指している四角はi行目
-var j = null; // 今指している四角はj列目
+const fname_d="./data/csv/default_sq.csv"; // csvファイル名、最初の状態
+const fname_a="./data/csv/answer_sq.csv"; // csvファイル名、答え
+
+let Gd = null; // デフォルトの格子情報
+let Gn = null; // 現在の格子情報
+let Ga = null; // 答えの格子情報
+
+
+var rowi_p = null; // 前回指した四角はrowi行目
+var colj_p = null; // 前回指した四角はcolj列目
+var rowi = null; // 今指している四角はrowi行目
+var colj = null; // 今指している四角はcolj列目
+
+
+let eflag = {}; // イベントフラグのON/OFFを管理する
+eflag["mousemove"]="OFF";
+eflag["click"]="OFF";
+
+
 
 function get_csv(fname_csv){
     // csvを読み込んだ結果を取得する関数
@@ -28,9 +43,9 @@ function get_csv(fname_csv){
         for (var i=0;i<tmp.length;i++){
             result[i]=tmp[i].split(",");
         }
-    
+
         return result;
-    }    
+    }
 
     return new Promise(function(resolve,reject){
         var request = new XMLHttpRequest();
@@ -39,10 +54,16 @@ function get_csv(fname_csv){
 
         request.onload = function(){
             result = split_csv(request.responseText);
-            G = result;
+            // G = result;
+
+            if (fname_csv == fname_d) { // デフォルトの格子情報
+                Gd = result;
+            } else if (fname_csv == fname_a) { // 答えの格子情報
+                Ga = result;
+            }
 
             // resolve(result);
-            resolve();
+            resolve(result);
         };
     });
 }
@@ -62,17 +83,23 @@ function prep_canvas_main(){
     });    
 }
 
-function draw_sq_byij(i,j,ccolor_gb="white",bold=false){
-// function draw_sq_byij(context,i,j,ccolor_gb="white",bold=false){
-    // i行j列目という情報が与えられたときの、i行j列目の四角を描く関数
 
+
+function draw_sq_byij(G,i,j,ccolor_gb="white",bold=true){
+    // console.log(` ${G}`);
+    // console.log(`draw_sq_byij, i, j, G[i][j] = ${i},${j},${G[i][j]}`);
+    // console.log(`context = ${context}`);
+
+    // 格子Gと、i行j列目という情報が与えられたときの、i行j列目の四角を描く関数
     if ((G[i][j]=="\u{3000}")||(G[i][j]==" ")){ // 全角空白は、枠を表示しない
     }
     else{ // 全角空白以外のとき、枠を表示
-        context.strokeStyle=ccolor_gs;
-        context.strokeRect(c_mar+j*sh,c_mar+i*sw,sh,sw);
+        // console.log(`else!, ${cmar+j*sh,cmar+i*sw,sh,sw}`);
+
+        context.strokeStyle = ccolor_gs;
+        context.strokeRect(cmar+j*sh,cmar+i*sw,sh,sw);
         context.fillStyle=ccolor_gb; // 枠があるときの背景色
-        context.fillRect(c_mar+j*sh,c_mar+i*sw,sh,sw);
+        context.fillRect(cmar+j*sh,cmar+i*sw,sh,sw);
 
         if (G[i][j]=="\u{25EF}") { // ◯の場合は、もうなにもしない
         }
@@ -85,82 +112,94 @@ function draw_sq_byij(i,j,ccolor_gb="white",bold=false){
             else{
                 context.font = `${sh}px serif`; // 残りの部分
             }
-            
-            context.fillStyle=ccolor_fd;                    
-            context.fillText(G[i][j],c_mar+j*sh,c_mar+i*sw);
+
+            context.fillStyle=ccolor_fd;
+            context.fillText(G[i][j],cmar+j*sh,cmar+i*sw);
         }
     }
 }
+// function draw_sq_byij(i,j,ccolor_gb="white",bold=false){
+// // function draw_sq_byij(context,i,j,ccolor_gb="white",bold=false){
+//     console.log("draw_sq_byij");
 
-function xy2sq_ij(x,y){
-    // x,yを受け取り、i,jに変換する
-    // x,yからi行j列目という情報を抽出して返す
-    // x,yが範囲外の場合、i,jはそれぞれnullを返す
+//     
+
+// }
+
+// function xy2sq_ij(x,y){
+//     // x,yを受け取り、i,jに変換する
+//     // x,yからi行j列目という情報を抽出して返す
+//     // x,yが範囲外の場合、i,jはそれぞれnullを返す
     
-    var i,j;
+//     var i,j;
 
-    if (x<c_mar || x>=cw-c_mar){ // xが格子の範囲外の場合
-        j=null;
-    }else{
-        j = Math.floor((x-c_mar)/sw);
-    }
+//     if (x<c_mar || x>=cw-c_mar){ // xが格子の範囲外の場合
+//         j=null;
+//     }else{
+//         j = Math.floor((x-c_mar)/sw);
+//     }
 
-    if (y<c_mar || y>=ch-c_mar){ // yが格子の範囲外の場合
-        i=null;
-    }else{
-        i = Math.floor((y-c_mar)/sh);
-    }
+//     if (y<c_mar || y>=ch-c_mar){ // yが格子の範囲外の場合
+//         i=null;
+//     }else{
+//         i = Math.floor((y-c_mar)/sh);
+//     }
 
-    return [i,j];
-}
+//     return [i,j];
+// }
 
 // function change_sq_mover(context,x,y){
-function change_sq_mover(x,y){
-    // マウスがオーバーしている四角の属性を、変化させる
-    // canvas上でのx,y座標を与えることで、その部分の四角を再描画する関数
-    // 条件分岐は2つ
-    // 1. 以前のx,yが格子の範囲の内にある場合
-    // 2. 現在のx,yが格子の範囲の内にある場合
-         
-    var ij=xy2sq_ij(x,y);
-    i=ij[0];
-    j=ij[1];
+// function change_sq_mover(x,y){
+//     // マウスがオーバーしている四角の属性を、変化させる
+//     // canvas上でのx,y座標を与えることで、その部分の四角を再描画する関数
+//     // 条件分岐は2つ
+//     // 1. 以前のx,yが格子の範囲の内にある場合
+//     // 2. 現在のx,yが格子の範囲の内にある場合
+    
+//     console.log("change_sq_mover");
 
-    if (i_p!=null && j_p!=null){
-        // 1. 以前のx,yが格子の範囲の内にあるとき
+//     var ij=xy2sq_ij(x,y);
+//     i=ij[0];
+//     j=ij[1];
 
-        if ((i==i_p) && (j==j_p)){ // 以前と同じ四角を指している場合、何もしない
-        }
-        else if ((i!=i_p) || (j!=j_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
-            draw_sq_byij(context,i_p,j_p,ccolor_gb="white",bold=true);
-        }
-    }
+//     if (i_p!=null && j_p!=null){
+//         // 1. 以前のx,yが格子の範囲の内にあるとき
 
-    if (i!=null && j!=null){
-        // 2. 現在のx,yが格子の範囲の内にある場合
+//         if ((i==i_p) && (j==j_p)){ // 以前と同じ四角を指している場合、何もしない
+//         }
+//         else if ((i!=i_p) || (j!=j_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
+//             draw_sq_byij(context,i_p,j_p,ccolor_gb="white",bold=true);
+//         }
+//     }
 
-        if ((i==i_p) && (j==j_p)){ // 以前と同じ四角を指している場合、何もしない
-        }
-        else if ((i!=null && i!=i_p) || (j!=null && j!=j_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
-            draw_sq_byij(context,i,j,ccolor_gb="orange",bold=true);
-        }
-    }
+//     if (i!=null && j!=null){
+//         // 2. 現在のx,yが格子の範囲の内にある場合
 
-    i_p=i;
-    j_p=j;
-}
+//         if ((i==i_p) && (j==j_p)){ // 以前と同じ四角を指している場合、何もしない
+//         }
+//         else if ((i!=null && i!=i_p) || (j!=null && j!=j_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
+//             draw_sq_byij(context,i,j,ccolor_gb="orange",bold=true);
+//         }
+//     }
 
-function draw_grid(args,G){
+//     i_p=i;
+//     j_p=j;
+// }
+
+function draw_grid(G) {
+// function draw_grid(args, G) {
+    // console.log(`draw_grid, G = ${G}`);
+
     // canvas上に格子を描く関数
-    var sw=args["sw"]; // 格子の幅
-    var sh=args["sh"]; // 格子の高さ
+    // var sw=args["sw"]; // 格子の幅
+    // var sh=args["sh"]; // 格子の高さ
     // var context=args["context"]; // context
 
     return new Promise(function (resolve,reject){
         // 枠線の描画
         for (let i=0;i<32;i++){
             for (let j=0;j<32;j++) {
-                draw_sq_byij(i,j,ccolor_gb="white",bold=true); // 四角を描く
+                draw_sq_byij(G,i,j,ccolor_gb="white",bold=true); // 四角を描く
                 // draw_sq_byij(context,i,j,ccolor_gb="white",bold=true); // 四角を描く
             }
         }
@@ -170,156 +209,191 @@ function draw_grid(args,G){
 }
 
 function when_mmove(e){
-// function when_mmove(e,canvas,context){
+// // function when_mmove(e,canvas,context){
     // canvas内でマウスが動いているとき
     // 厳密には、canvas外→内、canvas内→外の動作も取る
-    change_sq_mover(context,e.offsetX,e.offsetY); // 四角を描画する
+    console.log("mouse moving!");
+    // change_sq_mover(context,e.offsetX,e.offsetY); // 四角を描画する
 }
 
-function when_click(e){
-// function when_click(e,canvas,context){
-    // canvas内でクリックしたとき
+function when_click(e) {
+    console.log("mouse clicked!");
+    // console.log(getEventListeners(document.querySelector('canvas')));
+    canvas.removeEventListener("mousemove",when_mmove); // クリックのイベントを削除
+}
+// // function when_click(e,canvas,context){
+//     // canvas内でクリックしたとき
 
-    // canvas.addEventListener("mousemove",e=>{
-    //     when_mmove(e,canvas,context);
-    // },false);
-    // canvas.removeEventListener("mousemove",when_mmove); // クリックのイベントを削除
+//     // canvas.addEventListener("mousemove",e=>{
+//     //     when_mmove(e,canvas,context);
+//     // },false);
+//     // canvas.removeEventListener("mousemove",when_mmove); // クリックのイベントを削除
 
-    // canvas.removeEventListener("mousemove",e=>{
-    //     when_mmove(e,canvas,context); // クリックのイベントを削除
-    // },false);
+//     // canvas.removeEventListener("mousemove",e=>{
+//     //     when_mmove(e,canvas,context); // クリックのイベントを削除
+//     // },false);
 
-    // var dtb = document.getElementById("div_textbox"); // html内に記述したテキストボックスの要素を取得
-    var tb = document.getElementById("textbox"); // html内に記述したテキストボックスの要素を取得
-    // console.log(tb);
+//     // var dtb = document.getElementById("div_textbox"); // html内に記述したテキストボックスの要素を取得
+//     var tb = document.getElementById("textbox"); // html内に記述したテキストボックスの要素を取得
+//     // console.log(tb);
 
-    var ij = xy2sq_ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
-    i = ij[0];
-    j = ij[1];
+//     var ij = xy2sq_ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
+//     i = ij[0];
+//     j = ij[1];
 
-    if (i==null || j==null){ // 格子外をクリックしたとき
-        // dtb.innerHTML = `<input type='text' value=' ' size=1>`;
-        tb.value = "";
-        tb.readOnly = true;
-    }
-    else{ // 格子内をクリックしたとき
-        var v = G[i][j];
+//     if (i==null || j==null){ // 格子外をクリックしたとき
+//         // dtb.innerHTML = `<input type='text' value=' ' size=1>`;
+//         tb.value = "";
+//         tb.readOnly = true;
+//     }
+//     else{ // 格子内をクリックしたとき
+//         var v = G[i][j];
         
-        if (v=="\u{3000}"){ 
-            // 格子内でも、マスのないところは変更不可にする
-            tb.value = "";
-            tb.readOnly = true;    
-        }
-        else{ // 格子内で、マスのあるところ
-            tb.value = `${G[i][j]}`; // テキストボックスに、クリックしたマスの値を入れる
+//         if (v=="\u{3000}"){ 
+//             // 格子内でも、マスのないところは変更不可にする
+//             tb.value = "";
+//             tb.readOnly = true;    
+//         }
+//         else{ // 格子内で、マスのあるところ
+//             tb.value = `${G[i][j]}`; // テキストボックスに、クリックしたマスの値を入れる
 
-            if (v!="\u{25EF}"){
-                // マスがあっても、デフォルトで値の入っているところは変更不可にする
-                tb.readOnly = true;
-            }
-            else{
-                tb.readOnly = false;
-                tb.focus(); // テキストボックスにフォーカスをあわせる
-            }
-        } 
+//             if (v!="\u{25EF}"){
+//                 // マスがあっても、デフォルトで値の入っているところは変更不可にする
+//                 tb.readOnly = true;
+//             }
+//             else{
+//                 tb.readOnly = false;
+//                 tb.focus(); // テキストボックスにフォーカスをあわせる
+//             }
+//         } 
 
-        // tb.innerHTML = `<input type='text' value='${G[i][j]}' size=6 id='textbox' onfocus='this.value=this.value;'>`;
-        // tb.innerHTML = `<input type='text' value='${G[i][j]}' size=6>`;
-        // document.getElementById("textbox").focus();
-    }
-    // tb.setAttribute("type","text");
-}
+//         // tb.innerHTML = `<input type='text' value='${G[i][j]}' size=6 id='textbox' onfocus='this.value=this.value;'>`;
+//         // tb.innerHTML = `<input type='text' value='${G[i][j]}' size=6>`;
+//         // document.getElementById("textbox").focus();
+//     }
+//     // tb.setAttribute("type","text");
+// }
 
 // function when_penter(e,context,tb){
-function when_penter(e,tb){
-    // テキストボックスにフォーカスが合っているとき、Enterキーを押したとき
-    G[i][j]=tb.value;
-    console.log(`i=${i}, j=${j}, tb.value=${tb.value}, G[${i}][${j}]=${G[i][j]}`);    
+// function when_penter(e,tb){
+//     // テキストボックスにフォーカスが合っているとき、Enterキーを押したとき
+//     G[i][j]=tb.value;
+//     console.log(`i=${i}, j=${j}, tb.value=${tb.value}, G[${i}][${j}]=${G[i][j]}`);    
 
-    draw_sq_byij(context,i,j,ccolor_gb="white",bold=false);
-}
+//     draw_sq_byij(context,i,j,ccolor_gb="white",bold=false);
+// }
 
-var events = {};
-events["e_mousemove"]=e=>when_mmove(e);
-events["e_click"]=e=>when_click(e);
-events["e_keyup"]=e=>when_penter(e,tb);
+// var events = {};
+// events["e_mousemove"]=e=>when_mmove(e);
+// events["e_click"]=e=>when_click(e);
+// events["e_keyup"]=e=>when_penter(e,tb);
 
 function res_event(args){
     // イベントの登録をする関数
 
-    return new Promise(function(resolve,reject){
-        // var canvas = args["canvas"];
-        // var context = args["context"];
-        var tb = document.getElementById("textbox");
-
+    return new Promise(function (resolve, reject) {
         // canvas内でマウスを動かしたとき
-        canvas.addEventListener("mousemove",events["e_mousemove"],false);
+        // canvas.addEventListener("mousemove", events["e_mousemove"], false);
 
-        // canvas.addEventListener("mousemove",e=>{
-        //     when_mmove(e,canvas,context);
-        // },false);
+        if (eflag["mousemove"] == "OFF") {
+            canvas.addEventListener("mousemove", when_mmove, false);    
+        }
+        canvas.addEventListener("click",when_click,false);
 
-        // canvas内でマウスをクリックしたとき
-        // canvas.addEventListener("click",e=>{
-        //     when_click(e,canvas);
-        // },false);
-
-        canvas.addEventListener("click",events["e_click"],false);
-
-        // canvas.addEventListener("click",e=>{
-        //     when_click(e,canvas);
-        // },false);
-
-
-        // テキストボックスにカーソルが合っているとき、Enterキーを押したとき
-        tb.addEventListener("keyup",e=>{
-            when_penter(e,context,tb);
-        },false);
+        resolve();
     });
+//         // var canvas = args["canvas"];
+//         // var context = args["context"];
+//         var tb = document.getElementById("textbox");
+
+
+//         // canvas.addEventListener("mousemove",e=>{
+//         //     when_mmove(e,canvas,context);
+//         // },false);
+
+//         // canvas内でマウスをクリックしたとき
+//         // canvas.addEventListener("click",e=>{
+//         //     when_click(e,canvas);
+//         // },false);
+
+//         canvas.addEventListener("click",events["e_click"],false);
+
+//         // canvas.addEventListener("click",e=>{
+//         //     when_click(e,canvas);
+//         // },false);
+
+
+//         // テキストボックスにカーソルが合っているとき、Enterキーを押したとき
+//         tb.addEventListener("keyup",e=>{
+//             when_penter(e,context,tb);
+//         },false);
+//     });
 }
 
-var canvas = null;
-var context = null;
+// var canvas = null;
+// var context = null;
 
-function show(){
-    console.log(`G = ${G}`);
-}
+// function show(){
+//     console.log(`G = ${G}`);
+// }
 
-window.onload = function(){    
-    // ウィンドウのロード時に行うこと
+
+
+$(document).ready(function () {
+    // htmlが読み込めた後に実行
+
     canvas = document.getElementById("canvas_main");
     context = canvas.getContext("2d");
+    cw = canvas.width; // canvasの横幅
+    ch = canvas.height; // canvasの縦幅
+    cmar = 10 // canvas上の端（上下左右）のマージン
+    sw = (cw-2*cmar) / 32; // 格子中の1マスの幅
+    sh = (ch-2*cmar)/32; // 格子中の1マスの高さ
+
+
+    // promiseで順番に実行
+    // 1. canvas_mainを描画
+    // 2. デフォルトの状態のcsvを読み込む
+    // 3. デフォルトのcsvの内容に基づいて、格子全体を描画
+    // 4. イベント（マウスイン、マウスアウト、マウスオーバー、マウスクリック）を登録する
+    Promise.resolve().then(prep_canvas_main)
+        .then(get_csv.bind(this, fname_d))
+        .then(draw_grid.bind(Gd))
+        .then(res_event);
+});
+
+
+
+
+
+// window.onload = function(){    
+    // ウィンドウのロード時に行うこと
+    // canvas = document.getElementById("canvas_main");
+    // context = canvas.getContext("2d");
 
     // var canvas = document.getElementById("canvas_main");
     // var context = canvas.getContext("2d");
 
     // canvasの縦・横幅
-    cw = (canvas.width);
-    ch = (canvas.height);
+    // cw = (canvas.width);
+    // ch = (canvas.height);
     
     // 格子の一つの四角の縦・横幅
-    sw = (canvas.width-2*c_mar)/32;
-    sh = (canvas.height-2*c_mar)/32;
+    // sw = (canvas.width-2*c_mar)/32;
+    // sh = (canvas.height-2*c_mar)/32;
     
 
-    var fname_d="./data/csv/default_sq.csv"; // csvファイル名、最初の状態
-    // var fname_a="./data/csv/answer_sq.csv"; // csvファイル名、答え
     
-    // promiseで順番に実行
-    // 1. canvas_mainを描く
-    // 2. csvを読み込む
-    // 3. csvの内容に基づいて、格子を表示
+    
 
-    p=Promise.resolve().then(prep_canvas_main.bind(this,canvas,context))
-    // .then(get_csv.bind(this,fname_a))
-    .then(get_csv.bind(this,fname_d))
-    .then(show)
-
-    // .then(draw_grid.bind(this,{"sw":sw,"sh":sh}))
-    // .then(draw_grid.bind(this,{"context":context,"sw":sw,"sh":sh}))
-    // .then(res_event.bind(this,{"canvas":canvas,"context":context}));
-    // .then(res_event.bind(this));    
-}
+//     p=Promise.resolve().then(prep_canvas_main.bind(this,canvas,context))
+//     // .then(get_csv.bind(this,fname_a))
+//     .then(get_csv.bind(this,fname_d))
+//     .then(draw_grid.bind(this,{"sw":sw,"sh":sh}))
+//     // .then(draw_grid.bind(this,{"context":context,"sw":sw,"sh":sh}))
+//     // .then(res_event.bind(this,{"canvas":canvas,"context":context}));
+//       
+// }
 
 
 
