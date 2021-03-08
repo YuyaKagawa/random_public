@@ -1,0 +1,16 @@
+input[type=button]{
+    /* display: block; */
+}
+
+#b_show_hide_answer{
+    /* 「答えを表示」ボタン */
+    display: none;
+}
+
+#canvas_answer{
+    display: none;
+}
+
+#timer{
+    display: none;
+}

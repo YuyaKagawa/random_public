@@ -1,19 +1,20 @@
 <html>
     <head>
         <link rel="shortcut icon" href="#">
+        <link rel="stylesheet" href="mystyle.css">
         <title>クロスワード？スケルトン？</title>
         <meta charset="utf-8">
-        <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     </head>
     <body>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script type="text/javascript" src="javascript.js"></script>
+        <script type="text/javascript" src="myfunction.js"></script>
 
         <div>
             「稲葉直貴@puzlab」氏が作成された、初代ポケモンのスケルトンをhtmlとjavascriptで再現しようと試みました。<br>
             偉大なる原典: <a href="https://twitter.com/puzlab/status/1302126737891893249">氏のtwitter投稿（2020年9月5日）</a><br>
             本ページの制作者: 賀川祐耶<br>
-            制作日: 2021年3月5日
+            制作日: 2021年3月6日
             <hr>
         </div>
 
@@ -27,9 +28,14 @@
             <!-- <input type='text' size=6 maxlength=1 id='textbox' value="default" onkeyup="when_penter();"> -->
         </div>
         <div>
-            <input type="button" value="リセット" onclick="reset();"> 
-            <input type="button" value="正解を表示" onclick="show_answer();">
+            <input type="button" id="b_start_reset" value="スタート" onclick="pb_start_reset();">
+            <!-- <input type="button" id="reset" value="リセット" onclick="reset();"> -->
+            <input type="button" id="b_show_hide_answer" value="正解を表示" onclick="pb_show_hide_answer();">
+            <div id="timer">
+                タイマー部分のテキスト
+            </div>
         </div>
+
         <div>
             <canvas id="canvas_answer" height=600 width=600 tabindex="1"></canvas>
         </div>
