@@ -6,7 +6,8 @@ function pb_start_reset(){
         // console.log("start!!!");
         b_sr.value = "リセット";
         b_sh_a.style.display = "inline"; // 正解を表示/非表示ボタンを表示
-        b_j.style.display = "inline"; // 正解を表示/非表示ボタンを表示
+        b_sh_a.value = "正解を表示" // デフォルトの値
+        b_j.style.display = "inline"; // 判定ボタンを表示
         
         timer_start(); // タイマースタート
         start();
@@ -22,11 +23,11 @@ function pb_start_reset(){
 
             b_sh_a.style.display = "none"; // 正解を表示/非表示ボタンを非表示
             b_j.style.display = "none"; // 判定ボタンを非表示
-            // canvasa.style.display = "none"; // 正解を非表示
+            canvasa.style.display = "none"; // 正解を非表示
 
-            if (b_sh_a.value == "正解を非表示") { // 正解が表示されたままの場合、正解を非表示に
-                pb_show_hide_answer(); // 正解を非表示            
-            }
+            // if (b_sh_a.value == "正解を非表示") { // 正解が表示されたままの場合、正解を非表示に
+            //     pb_show_hide_answer(); // 正解を非表示            
+            // }
 
             G["n"] = G["d"].map(inner => inner.slice()); // デフォルトに戻す
             tb.value="press スタート";
@@ -74,6 +75,11 @@ function pb_judge(){
         let scount=0; // 入力可能なマスの数
         let ccount=0; // 合っているマスの数
 
+        // if (b_sh_a.value == "正解を表示") { // 正解が非表示のままの場合、正解を表示
+            // b_sh_a.style.display = "none"; // 正解を表示/非表示ボタンを非表示
+            // pb_show_hide_answer(); // 正解を表示   
+        // }
+
         // 正解判定をする
         for (let i=0;i<snum;i++){
             for (let j=0;j<snum;j++){
@@ -90,6 +96,7 @@ function pb_judge(){
         timer_stop(); // タイマーを止める
         alert(`time: ${timer_prep_text()}\nscore: ${ccount} / ${scount} (${(ccount*100/scount).toFixed(1)}%)`); // 時間、スコアを表示
         b_sh_a.style.display="none"; // 表示/非表示ボタンを非表示
+        canvasa.style.display = "block"; // 正解を表示
         b_judge.style.display="none"; // 判定ボタンを非表示
     }
     else{ // いいえを選択した場合、何もしない

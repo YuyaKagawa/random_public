@@ -198,11 +198,14 @@ function when_penter(e){
 
         const t = tb.value[tb.value.length-1];
         // Gn[rowi][colj]=hiratokana(tb.value);
-        G["n"][rowi][colj]=hira2kana(t);
+        G["n"][rowi][colj]=low2upp(hira2kana(t));
 
         // console.log(`t = ${t}`);
         // console.log(`Gn[rowi][colj] = ${Gn[rowi][colj]}`);
         drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=true);
+
+        // tb.value=t;
+        when_choosesq();
         // draw_sq_byij(con, Gn, rowi, colj, ccolor_gb = "orange", bold = false);
         // draw_sq_byij(Gn,rowi,colj,ccolor_gb="orange",bold=false);
     }else{

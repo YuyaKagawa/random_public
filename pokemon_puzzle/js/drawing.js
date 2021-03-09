@@ -23,9 +23,34 @@ function hira2kana(hiragana) {
 
     return hiragana.replace(/[\u3041-\u3096]/g, function(match) {
         var chr = match.charCodeAt(0) + 0x60;
+        // console.log(`chr = ${chr}`);
+
+        // if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(chr)>=0){ // もし小文字の場合、大文字に変換
+        //     chr=chr+1; 
+        // }
+
         return String.fromCharCode(chr);
     });
 }
+
+function low2upp(chr){
+    // カタカナを小文字から大文字に変換する関数
+
+    console.log(`low2upp, chr = ${chr}!`);
+
+
+    var c = chr.charCodeAt(0);
+
+    console.log(`low2upp, c = ${c}!`);
+
+
+    if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(c)>=0){ // もし小文字の場合、大文字に変換
+        c=c+1; 
+    }
+
+    return String.fromCharCode(c);
+}
+
 
 function get_csv(args) {
     // csvを読み込んだ結果を取得する関数
@@ -51,12 +76,54 @@ function get_csv(args) {
 
         request.onload = function () {
             result = split_csv(request.responseText);
+
+            // result=String(result);
+
+            // result.replace(/[\u30a1|\u30a3|\u30a5|\u30a7|\u30a9|\u3063|\u3083|\u3085|\u3087]/g, function(match) {
+            //     var chr = match.charCodeAt(0) + 0x01;
+            //     return String.fromCharCode(chr);
+            // });
+
+            // console.log(`get_csv, result = ${result}`);
+
+
+            // result=Object(result);
+
+
+            // return hiragana.replace(/[\u3041-\u3096]/g, function(match) {
+                // console.log(`chr = ${chr}`);
+        
+                // if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(chr)>=0){ // もし小文字の場合、大文字に変換
+                //     chr=chr+1; 
+                // }
+        
+                
+            // });
             
+            for (let i=0;i<snum;i++){
+                for (let j=0;j<snum;j++){
+                    let c = result[i][j].charCodeAt(0);
+
+                    if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(c)>=0){
+                        c=c+1;
+                        result[i][j]=String.fromCharCode(c);
+                    }
+                }
+            }
+
+
             G[Gname] = result;
+
+            // console.log(`get_csv, G[${Gname}].length = ${G[Gname].length}`);
+            
+            // console.log(`get_csv, G[${Gname}][32] = ${G[Gname][32]}`);
+
+            // console.log(`get_csv, G[${Gname}] = ${G[Gname]}`);
             
             if (Gname == "d") { // デフォルトのものを読み込むときは、進行中のものも用意する
                 // 2次元配列の値コピーには工夫が必要
                 G["n"] = G[Gname].map(inner=>inner.slice());
+                // G["n"] = result.map(inner=>inner.slice());
             }
 
             resolve();            
@@ -127,7 +194,9 @@ function drawsq_ij(con,Grid,i,j,ccolor_gb="white",bold=true){
             }
 
             con.fillStyle=ccolor_fd;
-            con.fillText(Grid[i][j],cmar+j*sh,cmar+i*sw);
+            // con.fillText(Grid[i][j],cmar+j*sh,cmar+i*sw);
+            // con.fillText(hira2kana(Grid[i][j]),cmar+j*sh,cmar+i*sw);
+            con.fillText(low2upp(hira2kana(Grid[i][j])),cmar+j*sh,cmar+i*sw);
         }
     }
 }
