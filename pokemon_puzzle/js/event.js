@@ -112,7 +112,6 @@ function when_click(e) {
 
     // if (eflag["mousemove"] == "ON"){
     //     eflag["mousemove"] = "OFF";
-    //     canvas.removeEventListener("mousemove",when_mmove); // クリックのイベントを削除
     // }
     // else{
     //     change_sq_mover(con,Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
@@ -193,6 +192,15 @@ function when_penter(e){
     // ここでエンターキーを検出する
     // 現時点では実はエンターキーではなく、文字を入力途中でも反応する
 
+    // 処理の都合上、最初にエンター以外は弾くようにする
+    if (e.key!="Enter" && e.key!="Process"){
+        // console.log("ENTERRRRRRRRRRRRRR");
+        // when_penter(e);
+        return
+    }
+
+
+
     if (tb.value.length>=1 && tb.readOnly==false){ // テキストボックスが入力可能状態の場合
     // if (tb.readOnly==false && e.key=="Process"){ // テキストボックスが入力可能状態の場合
 
@@ -255,12 +263,15 @@ function res_event(args){
 
         // テキストボックスにカーソルが合っているとき、Enterキーを押したとき
         // これはキーを離したタイミングで
-        tb.addEventListener("keyup", e=>{
-            if (e.key=="Enter" || e.key=="Process"){
-                // console.log("ENTERRRRRRRRRRRRRR");
-                when_penter(e);
-            }
-        },false);
+        // tb.addEventListener("keyup", e=>{
+        //     if (e.key=="Enter" || e.key=="Process"){
+        //         // console.log("ENTERRRRRRRRRRRRRR");
+        //         when_penter(e);
+        //     }
+        // }, false);
+        
+        tb.addEventListener("keyup",when_penter,false);
+
 
 
         
@@ -277,4 +288,17 @@ function res_event(args){
 
         resolve();
     });
+}
+
+function rem_event() {
+    // イベントリスナーを削除する関数
+    console.log("remove!");
+
+    canvasm.removeEventListener('contextmenu', when_rclick); // 右クリックのイベントを削除
+    canvasm.removeEventListener("click", when_click); // クリックのイベントを削除
+    document.removeEventListener("keydown",when_pkey); // キーを押すときのイベントを削除
+    // canvasm.removeEventListener("click",when_click); // クリックのイベントを削除
+    tb.removeEventListener("keyup",when_penter) // エンターキーのイベントを削除
+    
+
 }

@@ -40,7 +40,9 @@ function pb_start_reset(){
                 timer_stop(); // タイマーを止める
             }
 
-            prep_canvas({"canvas":canvasm,"context":contextm}); // canvasを灰色に染める
+
+            prep_canvas({ "canvas": canvasm, "context": contextm }); // canvasを灰色に染める
+            rem_event(); // イベントリスナーを削除する
             alert(message);
         }
         else { // もし確認画面でNOと答えた場合、何もしない
@@ -97,7 +99,8 @@ function pb_judge(){
         alert(`time: ${timer_prep_text()}\nscore: ${ccount} / ${scount} (${(ccount*100/scount).toFixed(1)}%)`); // 時間、スコアを表示
         b_sh_a.style.display="none"; // 表示/非表示ボタンを非表示
         canvasa.style.display = "block"; // 正解を表示
-        b_judge.style.display="none"; // 判定ボタンを非表示
+        b_judge.style.display = "none"; // 判定ボタンを非表示
+        rem_event(); // イベントリスナーを削除
     }
     else{ // いいえを選択した場合、何もしない
     }
