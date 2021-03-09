@@ -18,8 +18,15 @@ const ccolor_gs = "darkblue"; // canvasの格子の枠線の色
 const ccolor_fd = "black"; // canvas内のデフォルトの文字の色
 let ccolor_gb = "white"; // canvasの格子の背景の色
 
-const fname_d="./data/csv/default_sq.csv"; // csvファイル名、最初の状態
-const fname_a="./data/csv/answer_sq.csv"; // csvファイル名、正解
+const fname_d = "./data/csv/default_sq.csv"; // csvファイル名、最初の状態
+const fname_a = "./data/csv/answer_sq.csv"; // csvファイル名、正解
+const fname_l = "./data/csv/answer_utf8.csv"; // ポケモンのリスト
+
+let L = [] // ポケモンのリスト
+let l_p = null; // ポケモンのリストの要素
+
+let intro = null; // htmlの頭の部分
+
 
 // 格子
 let G = {} // 参照渡しのために、dictで作成してみる

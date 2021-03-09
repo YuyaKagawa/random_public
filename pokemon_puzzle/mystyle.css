@@ -11,6 +11,42 @@ input[type=button]{
     display: none;
 }
 
+#intro{
+    display: block;
+}
+
+
+#list_pokemon{
+    display: none;
+    float: right;
+}
+
+
+
+.p_l{
+    margin: 0px;
+}
+
+
+#list_pokemon{
+    height: 600;
+    overflow: scroll;
+}
+
+/* #list_pokemon::-webkit-scrollbar{ */
+/* #intro::-webkit-scrollbar{ */
+    /* width:1px;
+    background-color: brown;
+} */
+
+/* ::-webkit-scrollbar{
+    width:10px;
+} */
+
+
+#canvas_main{
+    float: none;
+}
 
 #canvas_answer{
     display: none;

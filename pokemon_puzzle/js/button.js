@@ -8,6 +8,9 @@ function pb_start_reset(){
         b_sh_a.style.display = "inline"; // 正解を表示/非表示ボタンを表示
         b_sh_a.value = "正解を表示" // デフォルトの値
         b_j.style.display = "inline"; // 判定ボタンを表示
+        l_p.style.display = "block"; // ポケモンのリストを表示
+        intro.style.display = "none"; // イントロを非表示
+        
         
         timer_start(); // タイマースタート
         start();
@@ -24,6 +27,10 @@ function pb_start_reset(){
             b_sh_a.style.display = "none"; // 正解を表示/非表示ボタンを非表示
             b_j.style.display = "none"; // 判定ボタンを非表示
             canvasa.style.display = "none"; // 正解を非表示
+            l_p.style.display = "none"; // ポケモンのリストを非表示
+            intro.style.display = "block"; // イントロを表示
+            reset_cb_pokemon_list(); // チェックボックスのチェックをすべて外す
+
 
             // if (b_sh_a.value == "正解を非表示") { // 正解が表示されたままの場合、正解を非表示に
             //     pb_show_hide_answer(); // 正解を非表示            
@@ -73,7 +80,14 @@ function pb_judge(){
     // 判定ボタンを押したとき
     const judge = confirm("正解を判定して終了しますか"); // 確認画面を表示
 
-    if (judge==true){
+    if (judge==true){ // 判定する場合、いろんなものを止めてから判定する
+        timer_stop(); // タイマーを止める
+        b_sh_a.style.display="none"; // 表示/非表示ボタンを非表示
+        canvasa.style.display = "block"; // 正解を表示
+        b_judge.style.display = "none"; // 判定ボタンを非表示
+        rem_event(); // イベントリスナーを削除
+
+
         let scount=0; // 入力可能なマスの数
         let ccount=0; // 合っているマスの数
 
@@ -82,25 +96,35 @@ function pb_judge(){
             // pb_show_hide_answer(); // 正解を表示   
         // }
 
-        // 正解判定をする
+        // 一マスずつ正解判定をする
         for (let i=0;i<snum;i++){
             for (let j=0;j<snum;j++){
                 if (G["d"][i][j]=="\u{25EF}"){ // 入力可能なマスの場合
                     scount=scount+1; // マスの数をインクリメント
 
-                    if ((G["a"][i][j]==G["n"][i][j])){
+                    if ((G["a"][i][j]==G["n"][i][j])){ // 正解と一致する場合
                         ccount=ccount+1; // 正解マス数をインクリメント
+                        drawsq_ij(contextm,G["n"],i,j,ccolor_gb="LightGreen",bold=false); 
                     }
+                    else{ // 正解と一致しない場合
+                        drawsq_ij(contextm,G["n"],i,j,ccolor_gb="LightPink",bold=false); 
+                    }
+
+                    // setTimeout(function(){},100); // 0.1sスリープ
                 }
+
             }
         }
 
-        timer_stop(); // タイマーを止める
-        alert(`time: ${timer_prep_text()}\nscore: ${ccount} / ${scount} (${(ccount*100/scount).toFixed(1)}%)`); // 時間、スコアを表示
-        b_sh_a.style.display="none"; // 表示/非表示ボタンを非表示
-        canvasa.style.display = "block"; // 正解を表示
-        b_judge.style.display = "none"; // 判定ボタンを非表示
-        rem_event(); // イベントリスナーを削除
+        
+        let text = `time: ${timer_prep_text()}\nscore: ${ccount} / ${scount} (${(ccount*100/scount).toFixed(1)}%)\n`;
+
+        if (scount==ccount){ // 全マス正解の場合
+            text = text + "COMPLETE! CONGRATULATIONS!";
+        }
+
+        // setTimeout(alert(text),1000);
+        alert(text); // 時間、スコアを表示        
     }
     else{ // いいえを選択した場合、何もしない
     }
@@ -136,3 +160,5 @@ function timer_stop() {
     timer.style.display = "none";
     // timer_time=0.0; 
 }
+
+

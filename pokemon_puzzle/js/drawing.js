@@ -36,12 +36,12 @@ function hira2kana(hiragana) {
 function low2upp(chr){
     // カタカナを小文字から大文字に変換する関数
 
-    console.log(`low2upp, chr = ${chr}!`);
+    // console.log(`low2upp, chr = ${chr}!`);
 
 
     var c = chr.charCodeAt(0);
 
-    console.log(`low2upp, c = ${c}!`);
+    // console.log(`low2upp, c = ${c}!`);
 
 
     if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(c)>=0){ // もし小文字の場合、大文字に変換
@@ -56,6 +56,7 @@ function get_csv(args) {
     // csvを読み込んだ結果を取得する関数
     const fname_csv = args["fname_csv"];
     const Gname = fname_csv.split("/")[3][0];
+    const list = args["list"];
 
     function split_csv(str){
         // csvの中身を読み込む関数
@@ -69,6 +70,7 @@ function get_csv(args) {
         return result;
     }
 
+
     return new Promise(function(resolve,reject){
         var request = new XMLHttpRequest();
         request.open("GET",fname_csv,true);
@@ -76,6 +78,8 @@ function get_csv(args) {
 
         request.onload = function () {
             result = split_csv(request.responseText);
+
+            // console.log(`get_csv, Gname = ${Gname}, result = ${result}`);
 
             // result=String(result);
 
@@ -100,19 +104,39 @@ function get_csv(args) {
                 
             // });
             
-            for (let i=0;i<snum;i++){
-                for (let j=0;j<snum;j++){
-                    let c = result[i][j].charCodeAt(0);
+            if (list==true){ // ポケモンのリストを読み込むとき
+                // result = split_csv(request.responseText);
+                L = result.map(inner=>inner.slice());
 
-                    if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(c)>=0){
-                        c=c+1;
-                        result[i][j]=String.fromCharCode(c);
+                // console.log(`get_csv, L[0] = ${L[0]}`);
+
+
+
+                // resolve();
+            }
+            else{
+                for (let i=0;i<snum;i++){
+                    for (let j=0;j<snum;j++){
+                        let c = result[i][j].charCodeAt(0);
+    
+                        if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(c)>=0){
+                            c=c+1;
+                            result[i][j]=String.fromCharCode(c);
+                        }
                     }
                 }
+    
+                G[Gname] = result;
+
+                if (Gname == "d") { // デフォルトのものを読み込むときは、進行中のものも用意する
+                    // 2次元配列の値コピーには工夫が必要
+                    G["n"] = G[Gname].map(inner=>inner.slice());
+                    // G["n"] = result.map(inner=>inner.slice());
+                }    
             }
+        
 
 
-            G[Gname] = result;
 
             // console.log(`get_csv, G[${Gname}].length = ${G[Gname].length}`);
             
@@ -120,11 +144,6 @@ function get_csv(args) {
 
             // console.log(`get_csv, G[${Gname}] = ${G[Gname]}`);
             
-            if (Gname == "d") { // デフォルトのものを読み込むときは、進行中のものも用意する
-                // 2次元配列の値コピーには工夫が必要
-                G["n"] = G[Gname].map(inner=>inner.slice());
-                // G["n"] = result.map(inner=>inner.slice());
-            }
 
             resolve();            
         };

@@ -30,7 +30,7 @@ function when_choosesq(rclick=false){
 
     // xy2ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
 
-    console.log(`choosesq, [rowi,colj] = [${rowi},${colj}]`);
+    // console.log(`choosesq, [rowi,colj] = [${rowi},${colj}]`);
 
     // 1. テキストボックスに選択した値の表示
     if (rowi==null || colj==null){ // 格子外をクリックしたとき
@@ -138,7 +138,7 @@ function movesq_arr(arr){
 // function movesq_byarrow(key_arrow){
     // 矢印キーを押して、マスを移動させる
 
-    console.log(`movesq_arr(), arr = ${arr}`);
+    // console.log(`movesq_arr(), arr = ${arr}`);
 
     // 移動先の候補を用意し、移動可能か検証する
     let rowi_c = rowi; // 行方向の移動先の候補
@@ -161,7 +161,7 @@ function movesq_arr(arr){
         rowi=rowi_c;
         colj=colj_c;
 
-        console.log(`rowi = ${rowi}, colj = ${colj}`)
+        // console.log(`rowi = ${rowi}, colj = ${colj}`)
 
         updatesq();
         when_choosesq();
@@ -292,7 +292,7 @@ function res_event(args){
 
 function rem_event() {
     // イベントリスナーを削除する関数
-    console.log("remove!");
+    // console.log("remove!");
 
     canvasm.removeEventListener('contextmenu', when_rclick); // 右クリックのイベントを削除
     canvasm.removeEventListener("click", when_click); // クリックのイベントを削除

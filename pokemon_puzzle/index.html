@@ -2,7 +2,7 @@
     <head>
         <link rel="shortcut icon" href="#">
         <link rel="stylesheet" href="mystyle.css">
-        <title>クロスワード？スケルトン？</title>
+        <title>初代ポケモン151匹クロスワード？スケルトン？</title>
         <meta charset="utf-8">
         <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     </head>
@@ -12,17 +12,23 @@
         <script type="text/javascript" src="js/drawing.js"></script>
         <script type="text/javascript" src="js/button.js"></script>
         <script type="text/javascript" src="js/event.js"></script>
+        <script type="text/javascript" src="js/list.js"></script>
         <script type="text/javascript" src="js/variable.js"></script>
+
         
-        <div>
-            「稲葉直貴@puzlab」氏が作成された、初代ポケモンのスケルトンをhtmlとjavascriptで再現しようと試みました。<br>
+        <div id = "intro">
+            「稲葉直貴@puzlab」氏が作成された、初代ポケモンのスケルトンをhtmlとjavascriptで実装することを試みました。<br>
             偉大なる原典: <a href="https://twitter.com/puzlab/status/1302126737891893249">氏のtwitter投稿（2020年9月5日）</a><br>
             本ページの制作者: 賀川祐耶<br>
             制作日: 2021年3月6日
             <hr>
         </div>
 
-        <canvas id="canvas_main" height=600 width=600 tabindex="1"></canvas>
+        <div id="list_pokemon"></div>
+
+        <div>
+            <canvas id="canvas_main" height=600 width=600 tabindex="1"></canvas>
+        </div>
         <!-- <canvas id="canvas_main" height=600 width=600></canvas> -->
         <div id="div_textbox">
             <!-- エンターキーを押したときの挙動は、jsの方で定義済み -->

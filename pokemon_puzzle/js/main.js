@@ -27,7 +27,8 @@ $(document).ready(function(){
     b_sr = document.getElementById("b_start_reset"); // スタート・リセットボタンの要素を取得
     b_sh_a = document.getElementById("b_show_hide_answer"); // 答えを表示/非表示ボタンの要素を取得
     b_j = document.getElementById("b_judge"); // 判定ボタンの要素を取得
-
+    l_p = document.getElementById("list_pokemon"); // ポケモンのリスト
+    intro = document.getElementById("intro"); // イントロ
 
     timer = document.getElementById("timer"); // タイマー
 
@@ -41,9 +42,12 @@ $(document).ready(function(){
         .then(prep_canvas.bind(this, { "canvas": canvasm, "context": contextm }))
         .then(prep_canvas.bind(this, { "canvas": canvasa, "context": contexta }))
         // .then(get_csv.bind(this, { "fname_csv": fname_d, "Grid": G["d"] }))
-        .then(get_csv.bind(this, { "fname_csv": fname_d }))
+        .then(get_csv.bind(this, { "fname_csv": fname_d,"list": false }))
         // .then(r => { assign_value({ "r": r, "Grid": "d" }) })
-        .then(get_csv.bind(this, { "fname_csv": fname_a }))
+        .then(get_csv.bind(this, { "fname_csv": fname_a,"list": false }))
+        .then(get_csv.bind(this, { "fname_csv": fname_l,"list": true}))
+        .then(listup)
+
         // .then(r => { assign_value({ "r": r, "Grid": "a" }) })
         
         // .then(show)
