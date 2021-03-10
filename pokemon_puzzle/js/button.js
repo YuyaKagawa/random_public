@@ -162,3 +162,16 @@ function timer_stop() {
 }
 
 
+function pb_hide_info(){
+    if (b_hide_info.value=="情報を非表示"){
+        b_hide_info.value="情報を表示";
+        document.getElementById("intro").style.display="none";
+        document.getElementById("howto").style.display="none";
+    }
+    else if (b_hide_info.value=="情報を表示"){
+        b_hide_info.value="情報を非表示";
+        document.getElementById("intro").style.display="block";
+        document.getElementById("howto").style.display="block";
+    }
+}
+

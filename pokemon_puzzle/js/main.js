@@ -14,6 +14,19 @@ $(document).ready(function(){
     canvasa = document.getElementById("canvas_answer");
     contexta = canvasa.getContext("2d");
 
+    canvasm.width = Math.min(window.innerHeight,window.innerWidth)-100;
+    canvasm.height = Math.min(window.innerHeight,window.innerWidth)-100;
+    canvasa.width = Math.min(window.innerHeight,window.innerWidth)-100;
+    canvasa.height = Math.min(window.innerHeight,window.innerWidth)-100;
+    // canvasa.width = canvasm.width;
+    // canvasa.height = canvasm.height;
+
+    
+
+    // canvasm.width = Math.min((window.innerHeight-100),(window.innerWidth-100));
+    // canvasm.height = Math.min((window.innerHeight-100),(window.innerWidth-100));
+    
+
     // console.log(`main! ${testv}`);
 
     // canvas関連の変数、canvas_mainとcanvas_answerで共通

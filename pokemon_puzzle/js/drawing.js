@@ -156,7 +156,9 @@ function prep_canvas(args){
 
     const can = args["canvas"]; // canvas
     const con = args["context"]; // context
+
     
+
     return new Promise(function (resolve,reject){        
         con.textBaseline = "top";
         con.fillStyle = ccolor_bg; // 四角の色

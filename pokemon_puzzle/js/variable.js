@@ -54,3 +54,14 @@ let b_j = null; // 判定ボタン
 let pid = null; // タイマーのプロセスID
 let timer = null; // タイマーオブジェクトinHTML
 let timer_time = null; // タイマーの経過時間
+
+
+// function set_canvas_size(){
+//     // キャンバスのサイズを変更する
+//     console.log(`scs, ${tb_canvas_size.value}`);
+
+//     canvasm.width = tb_canvas_size.value;
+//     canvasm.height = tb_canvas_size.value;
+    
+
+// }

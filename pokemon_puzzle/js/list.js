@@ -59,7 +59,7 @@ function listup(){
 
     // console.log(`listup after, L[0] = ${L[0]}`);
 
-    let text = "ポケモン151匹チェックリスト<br>";
+    let text = "ポケモン151匹チェックリスト<br>五十音順<br>";
     // text = text+`<input type="button" onclick="sort_pokemon_list(order='name');" value='sort!'>`;
 
     for (let i=0;i<L.length;i++){

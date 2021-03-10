@@ -1,3 +1,16 @@
+mark.red{
+    color: red;
+    background: none;
+    font-weight: bold;
+}
+
+mark.orange{
+    /* color: red; */
+    background: orange;
+    font-weight: bold;
+}
+
+
 input[type=button]{
     /* display: block; */
 }
@@ -54,4 +67,8 @@ input[type=button]{
 
 #timer{
     display: none;
+}
+
+#div_textbox{
+    /* display: none; */
 }
