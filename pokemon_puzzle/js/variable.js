@@ -27,7 +27,6 @@ let l_p = null; // ポケモンのリストの要素
 
 let intro = null; // htmlの頭の部分
 
-
 // 格子
 let G = {} // 参照渡しのために、dictで作成してみる
 
@@ -36,36 +35,16 @@ var colj_p = null; // 前回指した四角はcolj列目
 var rowi = null; // 今指している四角はrowi行目
 var colj = null; // 今指している四角はcolj列目
 
-let eflag = {}; // イベントフラグのON/OFFを管理する
-eflag["mousemove"]="OFF";
-eflag["mouseover"]=null;
-eflag["mouseout"]=null;
-
-// eflag["click"]="OFF";
-
 let tb; // html内に記述したテキストボックスの要素を取得
 let dtb; // html内に記述したテキストボックスの要素を取得
-// let v; // クリックしたマスの要素
 
 let b_sr = null; // スタート・リセットボタン
 let b_sh_a = null; // 答えを表示/非表示ボタン
 let b_j = null; // 判定ボタン
-// let b_i = null;
+
 let b_hi = null;
 let b_d = null;
-
 
 let pid = null; // タイマーのプロセスID
 let timer = null; // タイマーオブジェクトinHTML
 let timer_time = null; // タイマーの経過時間
-
-
-// function set_canvas_size(){
-//     // キャンバスのサイズを変更する
-//     console.log(`scs, ${tb_canvas_size.value}`);
-
-//     canvasm.width = tb_canvas_size.value;
-//     canvasm.height = tb_canvas_size.value;
-    
-
-// }

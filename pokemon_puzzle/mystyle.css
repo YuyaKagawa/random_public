@@ -10,9 +10,25 @@ mark.orange{
     font-weight: bold;
 }
 
+#intro{
+    display: block;
+}
 
-input[type=button]{
-    /* display: block; */
+#detail{
+    display: none;
+}
+
+#list_pokemon{
+    /* ポケモンのリスト */
+    height: 600;
+    overflow: scroll;
+    display: none;
+    float: right;
+}
+
+.p_l{
+    /* リスト中の各ポケモン */
+    margin: 0px;
 }
 
 #b_show_hide_answer{
@@ -20,42 +36,9 @@ input[type=button]{
     display: none;
 }
 #b_judge{
-    /* 「答えを表示」ボタン */
+    /* 「判定」ボタン */
     display: none;
 }
-
-#intro{
-    display: block;
-}
-
-
-#list_pokemon{
-    display: none;
-    float: right;
-}
-
-
-
-.p_l{
-    margin: 0px;
-}
-
-
-#list_pokemon{
-    height: 600;
-    overflow: scroll;
-}
-
-/* #list_pokemon::-webkit-scrollbar{ */
-/* #intro::-webkit-scrollbar{ */
-    /* width:1px;
-    background-color: brown;
-} */
-
-/* ::-webkit-scrollbar{
-    width:10px;
-} */
-
 
 #canvas_main{
     float: none;
@@ -67,8 +50,4 @@ input[type=button]{
 
 #timer{
     display: none;
-}
-
-#div_textbox{
-    /* display: none; */
 }

@@ -3,20 +3,17 @@ function pb_start_reset(){
 
     if (b_sr.value == "スタート") { // スタートボタンを押した場合、canvasを描画
         alert("スタート！！！");
-        // console.log("start!!!");
         b_sr.value = "リセット";
         b_sh_a.style.display = "inline"; // 正解を表示/非表示ボタンを表示
         b_sh_a.value = "正解を表示" // デフォルトの値
         b_j.style.display = "inline"; // 判定ボタンを表示
         l_p.style.display = "block"; // ポケモンのリストを表示
         intro.style.display = "none"; // イントロを非表示
-        
-        
+                
         timer_start(); // タイマースタート
         start();
     }
     else if (b_sr.value == "リセット"){ // リセットボタンを押した場合
-
         const do_reset = confirm("リセットしますか？\n作業内容は全て消去されます。"); // 確認画面を表示
 
         if (do_reset != true) { // もし確認画面でNOと答えた場合、何もしない
@@ -26,7 +23,6 @@ function pb_start_reset(){
             const do_reset2 = confirm("本当にリセットしますか？\n本当に作業内容は全て消去されます。"); // 確認画面を表示    
 
             if (do_reset2 == true) { // もし確認画面でYESと答えた場合
-                // console.log("リセット");
                 b_sr.value = "スタート";
 
                 var message = "リセットしました";
@@ -38,41 +34,19 @@ function pb_start_reset(){
                 intro.style.display = "block"; // イントロを表示
                 reset_cb_pokemon_list(); // チェックボックスのチェックをすべて外す
 
-
-                // if (b_sh_a.value == "正解を非表示") { // 正解が表示されたままの場合、正解を非表示に
-                //     pb_show_hide_answer(); // 正解を非表示            
-                // }
-
                 G["n"] = G["d"].map(inner => inner.slice()); // デフォルトに戻す
                 tb.value="press スタート";
                 tb.readOnly=true;
-            
-                // Promise.resolve(Gn).then(draw_grid.bind(Gn)).then(alert(message));
-                // draw_grid(G["d"]);
                 
                 if (timer_time>0.0){ // まだタイマーを止めていない場合 
                     timer_stop(); // タイマーを止める
                 }
 
-
                 prep_canvas({ "canvas": canvasm, "context": contextm }); // canvasを灰色に染める
                 rem_event(); // イベントリスナーを削除する
                 alert(message);
             }
-        }
-        
-
-        //     (do_reset == true) { // もし確認画面でYESと答えた場合
-        // }
-        // else {
-        //     return;
-        // }
-
-        // else { // もし確認画面でNOと答えた場合、何もしない
-        // }
-
-        
-        
+        }        
     }
 }
 
@@ -106,14 +80,8 @@ function pb_judge(){
         b_judge.style.display = "none"; // 判定ボタンを非表示
         rem_event(); // イベントリスナーを削除
 
-
         let scount=0; // 入力可能なマスの数
         let ccount=0; // 合っているマスの数
-
-        // if (b_sh_a.value == "正解を表示") { // 正解が非表示のままの場合、正解を表示
-            // b_sh_a.style.display = "none"; // 正解を表示/非表示ボタンを非表示
-            // pb_show_hide_answer(); // 正解を表示   
-        // }
 
         // 一マスずつ正解判定をする
         for (let i=0;i<snum;i++){
@@ -128,21 +96,15 @@ function pb_judge(){
                     else{ // 正解と一致しない場合
                         drawsq_ij(contextm,G["n"],i,j,ccolor_gb="LightPink",bold=false); 
                     }
-
-                    // setTimeout(function(){},100); // 0.1sスリープ
                 }
-
             }
         }
 
-        
         let text = `time: ${timer_prep_text()}\nscore: ${ccount} / ${scount} (${(ccount*100/scount).toFixed(1)}%)\n`;
 
         if (scount==ccount){ // 全マス正解の場合
             text = text + "やったぜ！ポケモンスケルトンコンプリート！！！";
         }
-
-        // setTimeout(alert(text),1000);
 
         for (let i = 0; i < 3; i++){
             alert(text); // 時間、スコアを表示                    
@@ -180,7 +142,6 @@ function timer_stop() {
     // タイマーをストップする関数
     clearInterval(pid);
     timer.style.display = "none";
-    // timer_time=0.0; 
 }
 
 
@@ -188,35 +149,25 @@ function pb_hide_info(){
     if (b_hi.value=="情報を非表示"){
         b_hi.value="情報を表示";
         document.getElementById("intro").style.display="none";
-        document.getElementById("howto").style.display = "none";
         document.getElementById("detail").style.display = "none";
-        b_d.value="詳細を表示";
+        b_d.value="詳細説明を表示";
     }
     else if (b_hi.value=="情報を表示"){
         b_hi.value="情報を非表示";
         document.getElementById("intro").style.display="block";
-        document.getElementById("howto").style.display="block";
-        document.getElementById("detail").style.display = "none"; // 詳細は非表示
-        b_d.value="詳細を表示";
+        document.getElementById("detail").style.display = "none"; // 詳細説明は非表示
+        b_d.value="詳細説明を表示";
     }
 }
 
 function pb_detail() {
-    // 詳細を表示ボタン
-    if (b_d.value=="詳細を非表示"){
-        b_d.value="詳細を表示";
-        // document.getElementById("intro").style.display="none";
-        // document.getElementById("howto").style.display = "none";
+    // 詳細説明を表示ボタン
+    if (b_d.value=="詳細説明を非表示"){
+        b_d.value="詳細説明を表示";
         document.getElementById("detail").style.display = "none";
-        // b_d.style.display = "none";
-        
     }
-    else if (b_d.value=="詳細を表示"){
-        b_d.value="詳細を非表示";
-        // document.getElementById("intro").style.display="block";
-        // document.getElementById("howto").style.display="block";
-        document.getElementById("detail").style.display = "block"; // 詳細は非表示
-        // b_d
+    else if (b_d.value=="詳細説明を表示"){
+        b_d.value="詳細説明を非表示";
+        document.getElementById("detail").style.display = "block"; // 詳細説明は非表示
     }
-
 }

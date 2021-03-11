@@ -23,11 +23,6 @@ function hira2kana(hiragana) {
 
     return hiragana.replace(/[\u3041-\u3096]/g, function(match) {
         var chr = match.charCodeAt(0) + 0x60;
-        // console.log(`chr = ${chr}`);
-
-        // if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(chr)>=0){ // もし小文字の場合、大文字に変換
-        //     chr=chr+1; 
-        // }
 
         return String.fromCharCode(chr);
     });
@@ -36,13 +31,7 @@ function hira2kana(hiragana) {
 function low2upp(chr){
     // カタカナを小文字から大文字に変換する関数
 
-    // console.log(`low2upp, chr = ${chr}!`);
-
-
     var c = chr.charCodeAt(0);
-
-    // console.log(`low2upp, c = ${c}!`);
-
 
     if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(c)>=0){ // もし小文字の場合、大文字に変換
         c=c+1; 
@@ -70,7 +59,6 @@ function get_csv(args) {
         return result;
     }
 
-
     return new Promise(function(resolve,reject){
         var request = new XMLHttpRequest();
         request.open("GET",fname_csv,true);
@@ -78,41 +66,9 @@ function get_csv(args) {
 
         request.onload = function () {
             result = split_csv(request.responseText);
-
-            // console.log(`get_csv, Gname = ${Gname}, result = ${result}`);
-
-            // result=String(result);
-
-            // result.replace(/[\u30a1|\u30a3|\u30a5|\u30a7|\u30a9|\u3063|\u3083|\u3085|\u3087]/g, function(match) {
-            //     var chr = match.charCodeAt(0) + 0x01;
-            //     return String.fromCharCode(chr);
-            // });
-
-            // console.log(`get_csv, result = ${result}`);
-
-
-            // result=Object(result);
-
-
-            // return hiragana.replace(/[\u3041-\u3096]/g, function(match) {
-                // console.log(`chr = ${chr}`);
-        
-                // if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(chr)>=0){ // もし小文字の場合、大文字に変換
-                //     chr=chr+1; 
-                // }
-        
-                
-            // });
             
             if (list==true){ // ポケモンのリストを読み込むとき
-                // result = split_csv(request.responseText);
                 L = result.map(inner=>inner.slice());
-
-                // console.log(`get_csv, L[0] = ${L[0]}`);
-
-
-
-                // resolve();
             }
             else{
                 for (let i=0;i<snum;i++){
@@ -131,19 +87,8 @@ function get_csv(args) {
                 if (Gname == "d") { // デフォルトのものを読み込むときは、進行中のものも用意する
                     // 2次元配列の値コピーには工夫が必要
                     G["n"] = G[Gname].map(inner=>inner.slice());
-                    // G["n"] = result.map(inner=>inner.slice());
                 }    
             }
-        
-
-
-
-            // console.log(`get_csv, G[${Gname}].length = ${G[Gname].length}`);
-            
-            // console.log(`get_csv, G[${Gname}][32] = ${G[Gname][32]}`);
-
-            // console.log(`get_csv, G[${Gname}] = ${G[Gname]}`);
-            
 
             resolve();            
         };
@@ -156,8 +101,6 @@ function prep_canvas(args){
 
     const can = args["canvas"]; // canvas
     const con = args["context"]; // context
-
-    
 
     return new Promise(function (resolve,reject){        
         con.textBaseline = "top";
@@ -192,10 +135,6 @@ function drawsq_ij(con,Grid,i,j,ccolor_gb="white",bold=true){
     // draw_girdでは、全(i,j)について実行される
     // 基本updatesqを通じて実行される
 
-    // console.log(`drawsq_ij, con = ${con}, Grid = ${Grid[0]}, i = ${i}, j = ${j}`);
-    // console.log(`drawsq_ij, con = ${con}, Grid = ${Grid[0]}`);
-    
-
     if ((Grid[i][j]=="\u{3000}")||(Grid[i][j]==" ")){ // 全角空白は、枠を表示しない
     }
     else { // 全角空白以外のとき、枠を表示
@@ -215,8 +154,6 @@ function drawsq_ij(con,Grid,i,j,ccolor_gb="white",bold=true){
             }
 
             con.fillStyle=ccolor_fd;
-            // con.fillText(Grid[i][j],cmar+j*sh,cmar+i*sw);
-            // con.fillText(hira2kana(Grid[i][j]),cmar+j*sh,cmar+i*sw);
             con.fillText(low2upp(hira2kana(Grid[i][j])),cmar+j*sh,cmar+i*sw);
         }
     }
@@ -228,125 +165,26 @@ function updatesq(){
     // 1. 以前のx,yが格子の範囲の内にあるとき
     // 2. 現在のx,yが格子の範囲の内にある場合
 
-    // drawsq_ij(con,Grid,i,j,ccolor_gb="white",bold=true){
-
-    // console.log(`updatesq, con = ${contextm}, Grid = ${G["n"][0]}`)
-
     if (rowi_p!=null && colj_p!=null){
         // 1. 以前のx,yが格子の範囲の内にあるとき
         if (["\u{3000}","\u{25EF}"].indexOf(G["d"][rowi_p][colj_p])<0){ // もし、デフォルトの文字だったら
-            // draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
             drawsq_ij(contextm,G["n"],rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
         }
         else{ // デフォルトの文字ではない場合
             drawsq_ij(contextm,G["n"],rowi_p,colj_p,ccolor_gb="white",bold=false);
-            // draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
-            // draw_sq_byij(Grid, rowi_p, colj_p, ccolor_gb = "white", bold = false);
         }
-
-        // if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
-        // }
-        // else if ((rowi!=rowi_p) || (colj!=colj_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
-            // if (["\u{3000}","\u{25EF}"].indexOf(G["d"][rowi_p][colj_p])<0){ // もし、デフォルトの文字だったら
-            //     // draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
-            //     drawsq_ij(contextm,G["n"],rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
-            // }
-            // else{ // デフォルトの文字ではない場合
-            //     drawsq_ij(contextm,G["n"],rowi_p,colj_p,ccolor_gb="white",bold=false);
-            //     // draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
-            //     // draw_sq_byij(Grid, rowi_p, colj_p, ccolor_gb = "white", bold = false);
-            // }
-        // }
     }
     
     if (rowi!=null && colj!=null){
         // 2. 現在のx,yが格子の範囲の内にある場合
         if (["\u{3000}", "\u{25EF}"].indexOf(G["d"][rowi][colj]) < 0) { // もし、デフォルトの文字だったら
             drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=true); // 太字で表示
-            // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=true);
-            // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
         }
         else{ // デフォルトの文字ではない場合
             drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=false); // 
-            // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
-            // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=false);
         }
-
-
-        // if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合でも、再描画する
-        // }
-        // else if ((rowi!=null && rowi!=rowi_p) || (colj!=null && colj!=colj_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
-        //     if (["\u{3000}", "\u{25EF}"].indexOf(G["d"][rowi][colj]) < 0) { // もし、デフォルトの文字だったら
-        //         drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=true); // 太字で表示
-        //         // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=true);
-        //         // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
-        //     }
-        //     else{ // デフォルトの文字ではない場合
-        //         drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=false); // 
-        //         // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
-        //         // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=false);
-        //     }
-        // }
     }
 
     rowi_p=rowi; // 以前のrowiは現在のrowi
     colj_p=colj; // 以前のcoljは現在のcolj
 }
-// function change_sq_mover(context,x,y){
-    // function change_sq_mover(con,Grid,x=null,y=null,ij=null){
-        // function change_sq_mover(Grid, x = null, y = null, ij = null) {
-            // マウスがオーバーしている四角の属性を、変化させる
-            // canvas上でのx,y座標を与えることで、その部分の四角を再描画する関数
-            // 条件分岐は2つ
-            // 1. 以前のx,yが格子の範囲の内にある場合
-            // 2. 現在のx,yが格子の範囲の内にある場合
-            
-            // if (ij==null){ // ijが引数として与えられていない場合
-            //     xy2ij(x,y);
-            // }
-            // else if (ij!=null){ // ijが引数として与えられている場合
-            //     rowi=ij[0];
-            //     colj=ij[1];
-            // }
-            
-            // if (rowi_p!=null && colj_p!=null){
-            //     // 1. 以前のx,yが格子の範囲の内にあるとき
-        
-            //     if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
-            //     }
-            //     else if ((rowi!=rowi_p) || (colj!=colj_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
-            //         if (["\u{3000}","\u{25EF}"].indexOf(Gd[rowi_p][colj_p])<0){ // もし、デフォルトの文字だったら
-            //             // draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
-            //             draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
-            //         }
-            //         else{ // デフォルトの文字ではない場合
-            //             draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
-            //             // draw_sq_byij(Grid, rowi_p, colj_p, ccolor_gb = "white", bold = false);
-            //         }
-            //     }
-            // }
-        
-            // if (rowi!=null && colj!=null){
-            //     // 2. 現在のx,yが格子の範囲の内にある場合
-        
-            //     if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
-            //     }
-            //     else if ((rowi!=null && rowi!=rowi_p) || (colj!=null && colj!=colj_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
-            //         if (["\u{3000}", "\u{25EF}"].indexOf(Gd[rowi][colj]) < 0) { // もし、デフォルトの文字だったら
-            //             draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=true);
-            //             // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
-            //         }
-            //         else{ // デフォルトの文字ではない場合
-            //             // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
-            //             draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=false);
-            //         }
-            //     }
-            // }
-        
-//             rowi_p=rowi;
-//             colj_p=colj;
-// }
-
-
-
-

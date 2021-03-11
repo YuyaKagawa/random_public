@@ -1,10 +1,3 @@
-function show() {
-    // テスト用に何か表示する関数
-    console.log(`show! G = ${G}`);
-    console.log(`show! G["d"] = ${G["d"]}`);
-    console.log(`show! G["a"] = ${G["a"]}`);    
-}
-
 $(document).ready(function(){
     // htmlが読み込めた後に実行
     // canvas_mainの黒枠だけ表示する
@@ -18,16 +11,6 @@ $(document).ready(function(){
     canvasm.height = Math.min(window.innerHeight,window.innerWidth)-100;
     canvasa.width = Math.min(window.innerHeight,window.innerWidth)-100;
     canvasa.height = Math.min(window.innerHeight,window.innerWidth)-100;
-    // canvasa.width = canvasm.width;
-    // canvasa.height = canvasm.height;
-
-    
-
-    // canvasm.width = Math.min((window.innerHeight-100),(window.innerWidth-100));
-    // canvasm.height = Math.min((window.innerHeight-100),(window.innerWidth-100));
-    
-
-    // console.log(`main! ${testv}`);
 
     // canvas関連の変数、canvas_mainとcanvas_answerで共通
     cw = canvasm.width; // canvasの横幅
@@ -35,7 +18,6 @@ $(document).ready(function(){
     cmar = 10 // canvas上の端（上下左右）のマージン
     sw = (cw-2*cmar) / snum; // 格子中の1マスの幅
     sh = (ch-2*cmar)/snum; // 格子中の1マスの高さ
-    // dtb= document.getElementById("div_textbox"); // 
     tb = document.getElementById("textbox"); // テキストボックスの要素を取得
     b_sr = document.getElementById("b_start_reset"); // スタート・リセットボタンの要素を取得
     b_sh_a = document.getElementById("b_show_hide_answer"); // 答えを表示/非表示ボタンの要素を取得
@@ -43,9 +25,6 @@ $(document).ready(function(){
 
     b_hi = document.getElementById("b_hide_info"); // 情報表示ボタンの要素を取得
     b_d = document.getElementById("b_detail"); // 詳細表示ボタンの要素を取得
-
-    // b_i =
-    
     
     l_p = document.getElementById("list_pokemon"); // ポケモンのリスト
     intro = document.getElementById("intro"); // イントロ
@@ -57,43 +36,14 @@ $(document).ready(function(){
     // 2. デフォルト、作業用、正解のcsvを読み込む
     // 3. 変数に代入する
 
-    // Promise.resolve().then(prep_canvas_main)
     Promise.resolve()
         .then(prep_canvas.bind(this, { "canvas": canvasm, "context": contextm }))
         .then(prep_canvas.bind(this, { "canvas": canvasa, "context": contexta }))
-        // .then(get_csv.bind(this, { "fname_csv": fname_d, "Grid": G["d"] }))
         .then(get_csv.bind(this, { "fname_csv": fname_d,"list": false }))
-        // .then(r => { assign_value({ "r": r, "Grid": "d" }) })
         .then(get_csv.bind(this, { "fname_csv": fname_a,"list": false }))
         .then(get_csv.bind(this, { "fname_csv": fname_l,"list": true}))
         .then(listup)
-
-        // .then(r => { assign_value({ "r": r, "Grid": "a" }) })
-        
-        // .then(show)
-        
-        // .then(draw_grid.bind(G["d"]))
-
-    
-        // .then(r => {console.log(`value = ${r}`);})
-
-    
-        //     function (value) {
-        //     console.log(`value = ${value}`);
-        // })
-            // .bind(this, { "Grid": G["d"] }))
-        // .then(assign_value.bind(value,{"Grid":G["d"]}))
-
-        // 
-        // .then(res_event);
 });
-
-
-// $(G["d"].ready(function () {
-//     console.log("ready!");
-//     console.log(`show! G["d"] = ${G["d"]}`);
-//     console.log(`show! G["a"] = ${G["a"]}`); 
-// })
 
 function start() {
     // スタートボタンを押したときに、スタートする
@@ -104,27 +54,10 @@ function start() {
     // 4. 正解のcsvの内容に基づいて、canvas_answerに格子全体を描画
     // 5. canvas_mainに、イベント（マウスイン、マウスアウト、マウスオーバー、マウスクリック）を登録する
 
-    // show();
-
     Promise.resolve()
         .then(draw_grid.bind(this, { "context": contextm, "Grid": G["d"] }))
         .then(draw_grid.bind(this, { "context": contexta, "Grid": G["a"] }))
-        // .then(res_event.bind(this, { "context": contextm, "canvas": canvasm, "Gname": "d" }))
-        .then(res_event)
-
-    
-
-    
-    
-    // draw_grid(con,Grid)
-
-
-
-    // timer_start(); // タイマースタート
-
-    // console.log(`G[d] = ${G["d"]}`)
-    // console.log(`G[a] = ${G["a"]}`)
-    
+        .then(res_event)    
 }
 
 

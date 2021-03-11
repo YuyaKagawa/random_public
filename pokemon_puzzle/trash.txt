@@ -225,3 +225,534 @@
 
     //     // canvas.addEventListener('contextmenu', e => e.preventDefault());
     //     // canvas.addEventListener('contextmenu', when_rclick,false); // →クリックを押したときに実行
+
+
+// 20210311 index.html
+
+                            <!-- <div id="howto">
+            
+        </div> -->
+
+        <!-- <div>
+            <input type="text" id="tb_canvas_size" default="キャンバスの1辺の大きさ">
+            <input type="button" onclick="set_canvas_size();" value="変更を反映">
+        </div> -->
+
+        <!-- <canvas id="canvas_main" height=600 width=600></canvas> -->
+
+            <!-- <input type='text' size=6 maxlength=1 id='textbox' value="default"> -->
+            <!-- <input type='text' size=6 maxlength=1 id='textbox' value="default" onkeyup="when_penter();"> -->
+<!-- <input type="button" id="reset" value="リセット" onclick="reset();"> -->
+            
+
+
+// 20210311 mystyle.css
+/* input[type=button]{ */
+    /* display: block; */
+/* } */
+
+/* #list_pokemon::-webkit-scrollbar{ */
+/* #intro::-webkit-scrollbar{ */
+    /* width:1px;
+    background-color: brown;
+} */
+
+/* ::-webkit-scrollbar{
+    width:10px;
+} */
+
+
+/* #div_textbox{ */
+    /* display: none; */
+/* } */
+
+// 20210311 button.js
+
+                    // console.log("start!!!");
+                // console.log("リセット");
+
+                // if (b_sh_a.value == "正解を非表示") { // 正解が表示されたままの場合、正解を非表示に
+                //     pb_show_hide_answer(); // 正解を非表示            
+                // }
+
+                // Promise.resolve(Gn).then(draw_grid.bind(Gn)).then(alert(message));
+                // draw_grid(G["d"]);
+
+        //     (do_reset == true) { // もし確認画面でYESと答えた場合
+        // }
+        // else {
+        //     return;
+        // }
+
+        // else { // もし確認画面でNOと答えた場合、何もしない
+        // }
+
+        // if (b_sh_a.value == "正解を表示") { // 正解が非表示のままの場合、正解を表示
+            // b_sh_a.style.display = "none"; // 正解を表示/非表示ボタンを非表示
+            // pb_show_hide_answer(); // 正解を表示   
+        // }
+
+                    // setTimeout(function(){},100); // 0.1sスリープ
+
+        // setTimeout(alert(text),1000);
+
+    // timer_time=0.0; 
+
+        // document.getElementById("howto").style.display = "none";
+
+        // document.getElementById("howto").style.display="block";
+
+        // document.getElementById("intro").style.display="none";
+        // document.getElementById("howto").style.display = "none";
+
+        // b_d.style.display = "none";
+
+        // document.getElementById("intro").style.display="block";
+        // document.getElementById("howto").style.display="block";
+        // b_d
+
+
+// 20210311 drawing.js
+                    // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=true);
+            // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
+            // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
+            // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=false);
+
+
+        // if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合でも、再描画する
+        // }
+        // else if ((rowi!=null && rowi!=rowi_p) || (colj!=null && colj!=colj_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
+        //     if (["\u{3000}", "\u{25EF}"].indexOf(G["d"][rowi][colj]) < 0) { // もし、デフォルトの文字だったら
+        //         drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=true); // 太字で表示
+        //         // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=true);
+        //         // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
+        //     }
+        //     else{ // デフォルトの文字ではない場合
+        //         drawsq_ij(contextm,G["n"],rowi,colj,ccolor_gb="orange",bold=false); // 
+        //         // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
+        //         // draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=false);
+        //     }
+        // }
+
+// function change_sq_mover(context,x,y){
+    // function change_sq_mover(con,Grid,x=null,y=null,ij=null){
+        // function change_sq_mover(Grid, x = null, y = null, ij = null) {
+            // マウスがオーバーしている四角の属性を、変化させる
+            // canvas上でのx,y座標を与えることで、その部分の四角を再描画する関数
+            // 条件分岐は2つ
+            // 1. 以前のx,yが格子の範囲の内にある場合
+            // 2. 現在のx,yが格子の範囲の内にある場合
+            
+            // if (ij==null){ // ijが引数として与えられていない場合
+            //     xy2ij(x,y);
+            // }
+            // else if (ij!=null){ // ijが引数として与えられている場合
+            //     rowi=ij[0];
+            //     colj=ij[1];
+            // }
+            
+            // if (rowi_p!=null && colj_p!=null){
+            //     // 1. 以前のx,yが格子の範囲の内にあるとき
+        
+            //     if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
+            //     }
+            //     else if ((rowi!=rowi_p) || (colj!=colj_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
+            //         if (["\u{3000}","\u{25EF}"].indexOf(Gd[rowi_p][colj_p])<0){ // もし、デフォルトの文字だったら
+            //             // draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
+            //             draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
+            //         }
+            //         else{ // デフォルトの文字ではない場合
+            //             draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
+            //             // draw_sq_byij(Grid, rowi_p, colj_p, ccolor_gb = "white", bold = false);
+            //         }
+            //     }
+            // }
+        
+            // if (rowi!=null && colj!=null){
+            //     // 2. 現在のx,yが格子の範囲の内にある場合
+        
+            //     if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
+            //     }
+            //     else if ((rowi!=null && rowi!=rowi_p) || (colj!=null && colj!=colj_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
+            //         if (["\u{3000}", "\u{25EF}"].indexOf(Gd[rowi][colj]) < 0) { // もし、デフォルトの文字だったら
+            //             draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=true);
+            //             // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
+            //         }
+            //         else{ // デフォルトの文字ではない場合
+            //             // draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
+            //             draw_sq_byij(con,Grid,rowi,colj,ccolor_gb="orange",bold=false);
+            //         }
+            //     }
+            // }
+        
+//             rowi_p=rowi;
+//             colj_p=colj;
+// }
+
+
+
+
+
+
+                // result = split_csv(request.responseText);
+
+                                // console.log(`chr = ${chr}`);
+
+        // if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(chr)>=0){ // もし小文字の場合、大文字に変換
+        //     chr=chr+1; 
+        // }
+
+    // console.log(`low2upp, chr = ${chr}!`);
+
+    // console.log(`low2upp, c = ${c}!`);
+
+
+
+            // console.log(`get_csv, Gname = ${Gname}, result = ${result}`);
+
+            // result=String(result);
+
+            // result.replace(/[\u30a1|\u30a3|\u30a5|\u30a7|\u30a9|\u3063|\u3083|\u3085|\u3087]/g, function(match) {
+            //     var chr = match.charCodeAt(0) + 0x01;
+            //     return String.fromCharCode(chr);
+            // });
+
+            // console.log(`get_csv, result = ${result}`);
+
+
+            // result=Object(result);
+
+
+            // return hiragana.replace(/[\u3041-\u3096]/g, function(match) {
+                // console.log(`chr = ${chr}`);
+        
+                // if ([12449,12451,12453,12455,12457,12483,12515,12517,12519].indexOf(chr)>=0){ // もし小文字の場合、大文字に変換
+                //     chr=chr+1; 
+                // }
+        
+                
+            // });
+
+                // console.log(`get_csv, L[0] = ${L[0]}`);
+
+
+
+                // resolve();
+
+                    // G["n"] = result.map(inner=>inner.slice());
+
+            // console.log(`get_csv, G[${Gname}].length = ${G[Gname].length}`);
+            
+            // console.log(`get_csv, G[${Gname}][32] = ${G[Gname][32]}`);
+
+            // console.log(`get_csv, G[${Gname}] = ${G[Gname]}`);
+
+    // console.log(`drawsq_ij, con = ${con}, Grid = ${Grid[0]}, i = ${i}, j = ${j}`);
+    // console.log(`drawsq_ij, con = ${con}, Grid = ${Grid[0]}`);
+
+
+            // con.fillText(Grid[i][j],cmar+j*sh,cmar+i*sw);
+            // con.fillText(hira2kana(Grid[i][j]),cmar+j*sh,cmar+i*sw);
+
+    // drawsq_ij(con,Grid,i,j,ccolor_gb="white",bold=true){
+
+    // console.log(`updatesq, con = ${contextm}, Grid = ${G["n"][0]}`)
+
+            // draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
+
+                                // draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
+            // draw_sq_byij(Grid, rowi_p, colj_p, ccolor_gb = "white", bold = false);
+
+        // if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
+        // }
+        // else if ((rowi!=rowi_p) || (colj!=colj_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
+            // if (["\u{3000}","\u{25EF}"].indexOf(G["d"][rowi_p][colj_p])<0){ // もし、デフォルトの文字だったら
+            //     // draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
+            //     drawsq_ij(contextm,G["n"],rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
+            // }
+            // else{ // デフォルトの文字ではない場合
+            //     drawsq_ij(contextm,G["n"],rowi_p,colj_p,ccolor_gb="white",bold=false);
+            //     // draw_sq_byij(con,Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
+            //     // draw_sq_byij(Grid, rowi_p, colj_p, ccolor_gb = "white", bold = false);
+            // }
+        // }
+
+// 20210311 event.js
+                    // function when_mmove(e){
+
+        // change_sq_mover(Gn, e.offsetX, e.offsetY); // カーソルの合った四角を描画する
+
+    // 0. 余白の場合、rowi、coljを元にもどす
+
+        // tb.readOnly = true;
+        // tb.value = "";
+
+    // rclick（右クリック）の場合、指定したマスの値の削除も行う
+    // when_click()、when_rclick()とmovesq_byarrow()と内で実行
+
+    // xy2ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
+
+    // console.log(`choosesq, [rowi,colj] = [${rowi},${colj}]`);
+// console.log(`choose_sq, G["n"] = ${G["n"]}`);
+            
+        // if (vd=="\u{25EF}"){ // もともと編集可能マス（not デフォルト文字あり、not 余白）の場合
+        //     tb.readOnly = false; // 編集可能にする
+        //     tb.focus(); // テキストボックスにフォーカスをあわせる 
+
+        //     if (rclick==true){ // 右クリックの場合
+        //         G["n"][rowi][colj]=vd; // 進行中のGridのマスを上書きする
+        //     }
+
+        //     let vn = G["n"][rowi][colj]; // 現在のマスの要素を取得
+
+        //     if (vn=="\u{25EF}"){ // 現在空白の場合
+        //         tb.value = "";
+        //     }
+        //     else{ // 現在空白ではない場合
+        //         tb.value = `${vn}`; // テキストボックスに、クリックしたマスの値を入れる
+        //     }
+        // }
+        // else{ // もともと編集可能ではない場合（デフォルト文字あり、余白）
+        //     // tb.readOnly = true;
+        //     // tb.value = "";
+        // }
+
+    // 2. マス目のハイライト
+
+
+    // change_sq_mover(con,Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
+    // updatesq(con,Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
+    // updatesq(); // カーソルの合った四角を描画する
+
+
+    // if (eflag["mousemove"] == "ON"){
+    //     eflag["mousemove"] = "OFF";
+    // }
+    // else{
+    //     change_sq_mover(con,Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
+    //     // change_sq_mover(Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
+
+    //     if (rowi!=rowi_p || colj!=colj_p){
+    //         eflag["mousemove"] = "ON";
+    //         canvas.addEventListener("mousemove", when_mmove, false);    
+    //     }
+    // }    
+
+                        // function movesq_byarrow(key_arrow){
+
+    // console.log(`movesq_arr(), arr = ${arr}`);
+
+        // console.log(`rowi = ${rowi}, colj = ${colj}`)
+
+        // change_sq_mover(con,Gn,x=null,y=null,ij=[rowi,colj]);
+        // change_sq_mover(Gn, x = null, y = null, ij = [rowi, colj]);
+
+        // change_sq_mover(con, Gn,x=null,y=null,ij=[rowi_c,colj_c]);
+
+        // change_sq_mover(Gn,x=null,y=null,ij=[rowi_c,colj_c]);
+
+    // when_choosesq();
+
+    // e.preventDefault();
+
+        // movesq_byarrow(e.key.substr(5,e.key.length)); // マスを移動する
+
+        // console.log("ENTERRRRRRRRRRRRRR");
+        // when_penter(e);
+
+        // if (tb.readOnly==false && e.key=="Process"){ // テキストボックスが入力可能状態の場合
+
+
+                // Gn[rowi][colj]=hiratokana(tb.value);
+
+        // console.log(`t = ${t}`);
+        // console.log(`Gn[rowi][colj] = ${Gn[rowi][colj]}`);
+
+        // tb.value=t;
+
+        // draw_sq_byij(con, Gn, rowi, colj, ccolor_gb = "orange", bold = false);
+        // draw_sq_byij(Gn,rowi,colj,ccolor_gb="orange",bold=false);
+
+        // console.log("else!");
+
+    // function res_event(args,can){
+
+    // const can = args["canvas"];
+    // const con = args["context"];
+    
+    // const Gname = args["Gname"];
+
+    // console.log(`res_event!, can = ${can}`);
+    // console.log(`res_event!, con = ${con}`);
+    // console.log(`res_event!, Gname = ${Gname}`);
+    // console.log(`res_event! = G["n"][0] = ${G["n"][0]}`);
+
+        // canvasm.addEventListener("mousemove", when_mmove, false);
+
+        // テキストボックスにカーソルが合っているとき、Enterキーを押したとき
+        // これはキーを離したタイミングで
+        // tb.addEventListener("keyup", e=>{
+        //     if (e.key=="Enter" || e.key=="Process"){
+        //         // console.log("ENTERRRRRRRRRRRRRR");
+        //         when_penter(e);
+        //     }
+        // }, false);
+
+
+
+        
+    //     eflag["mousemove"] = "ON";
+    //     can.addEventListener("mousemove", when_mmove, false);
+    //     can.addEventListener("click",when_click,false); // canvas上でクリックしたとき
+
+    //     // 
+
+
+    //     // document.addEventListener("keydown",when_p,false);
+
+    // console.log("remove!");
+
+    // canvasm.removeEventListener("click",when_click); // クリックのイベントを削除
+
+// 20210311 list.js
+        // console.log("sort by pid!");
+
+
+        // console.log("sort by name!");
+
+            // console.log(`a, b = ${a[6]}, ${b[6]}`);
+            // console.log(`v = ${String(a[6]).localeCompare(String(b[6]))}`);
+            
+    // console.log(`L[1] = ${L[1]}`);
+    // }
+
+    // let text = "ポケモン151匹チェックリスト<br>";
+    // text = text+`<input type="button" onclick="sort_pokemon_list(order='name');" value='sort!'>`;
+
+    // for (let i=0;i<151;i++){
+    //     // console.log(L[i]);
+    //     const pid = String(L[i][5]).padStart(3,"0");
+    //     // text=text+`<p id="p_${pid}"><input type="checkbox" onclick="cb_pokemon_list(this);">${pid} ${L[i][6]}</p>`;
+    //     // text=text+`<p class="p_l"><input type="checkbox" class="cb_p" onclick="cb_pokemon_list(this);" value="${pid}">${pid} ${L[i][6]}</p>`;
+    //     // text=text+`<p class="p_l"><label><input type="checkbox" class="cb_p" onclick="cb_pokemon_list(this);" value="${pid}">${pid} ${L[i][6]}</label></p>`;
+    //     text=text+`<p class="p_l"><label><input type="checkbox" class="cb_p" onclick="cb_pokemon_list(this);">${pid} ${L[i][6]}</label></p>`;
+
+    //     if (i%10==9){
+    //         text=text+"<br>";
+    //     }
+    // }
+
+    // l_p.innerHTML = text;
+
+    // console.log(`listup before, L[0] = ${L[0]}`);
+
+    // L.sort(function (a,b){ // なにかわからんが、図鑑ナンバー順でソートできる
+    //     return a[5]-b[5];
+    // });
+
+    // console.log(`listup after, L[0] = ${L[0]}`);
+
+    // text = text+`<input type="button" onclick="sort_pokemon_list(order='name');" value='sort!'>`;
+
+        // console.log(L[i]);
+
+        // text=text+`<p id="p_${pid}"><input type="checkbox" onclick="cb_pokemon_list(this);">${pid} ${L[i][6]}</p>`;
+        // text=text+`<p class="p_l"><input type="checkbox" class="cb_p" onclick="cb_pokemon_list(this);" value="${pid}">${pid} ${L[i][6]}</p>`;
+        // text=text+`<p class="p_l"><label><input type="checkbox" class="cb_p" onclick="cb_pokemon_list(this);" value="${pid}">${pid} ${L[i][6]}</label></p>`;
+
+            // console.log(`checked! cbs = ${cbs[i]}`);
+            // console.log(`checked! cbs = ${cbs[i]}`);
+
+    // var cv = document.querySelector(".cb_p:checked").value;
+
+    // console.log(`cb, cv = ${cv}`);
+
+// 20210311 main.js
+function show() {
+    // テスト用に何か表示する関数
+    console.log(`show! G = ${G}`);
+    console.log(`show! G["d"] = ${G["d"]}`);
+    console.log(`show! G["a"] = ${G["a"]}`);    
+}
+    // canvasa.width = canvasm.width;
+    // canvasa.height = canvasm.height;
+
+    
+
+    // canvasm.width = Math.min((window.innerHeight-100),(window.innerWidth-100));
+    // canvasm.height = Math.min((window.innerHeight-100),(window.innerWidth-100));
+    
+
+    // console.log(`main! ${testv}`);
+
+    // dtb= document.getElementById("div_textbox"); // 
+
+    // b_i =
+    
+
+        // Promise.resolve().then(prep_canvas_main)
+
+        // .then(r => { assign_value({ "r": r, "Grid": "a" }) })
+        
+        // .then(show)
+        
+        // .then(draw_grid.bind(G["d"]))
+
+    
+        // .then(r => {console.log(`value = ${r}`);})
+
+    
+        //     function (value) {
+        //     console.log(`value = ${value}`);
+        // })
+            // .bind(this, { "Grid": G["d"] }))
+        // .then(assign_value.bind(value,{"Grid":G["d"]}))
+
+        // 
+        // .then(res_event);
+
+        // .then(get_csv.bind(this, { "fname_csv": fname_d, "Grid": G["d"] }))
+        // .then(r => { assign_value({ "r": r, "Grid": "d" }) })
+
+// $(G["d"].ready(function () {
+//     console.log("ready!");
+//     console.log(`show! G["d"] = ${G["d"]}`);
+//     console.log(`show! G["a"] = ${G["a"]}`); 
+// })
+
+    // show();
+    // .then(res_event.bind(this, { "context": contextm, "canvas": canvasm, "Gname": "d" }))
+    
+    
+    // draw_grid(con,Grid)
+
+
+
+    // timer_start(); // タイマースタート
+
+    // console.log(`G[d] = ${G["d"]}`)
+    // console.log(`G[a] = ${G["a"]}`)
+
+
+// 20210311 variable.js
+// eflag["click"]="OFF";
+// let v; // クリックしたマスの要素
+// let b_i = null;
+
+// function set_canvas_size(){
+//     // キャンバスのサイズを変更する
+//     console.log(`scs, ${tb_canvas_size.value}`);
+
+//     canvasm.width = tb_canvas_size.value;
+//     canvasm.height = tb_canvas_size.value;
+    
+
+// }
+// let eflag = {}; // イベントフラグのON/OFFを管理する
+// eflag["mousemove"]="OFF";
+// eflag["mouseover"]=null;
+// eflag["mouseout"]=null;
+
+
+
+
