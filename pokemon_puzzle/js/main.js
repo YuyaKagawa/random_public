@@ -40,6 +40,13 @@ $(document).ready(function(){
     b_sr = document.getElementById("b_start_reset"); // スタート・リセットボタンの要素を取得
     b_sh_a = document.getElementById("b_show_hide_answer"); // 答えを表示/非表示ボタンの要素を取得
     b_j = document.getElementById("b_judge"); // 判定ボタンの要素を取得
+
+    b_hi = document.getElementById("b_hide_info"); // 情報表示ボタンの要素を取得
+    b_d = document.getElementById("b_detail"); // 詳細表示ボタンの要素を取得
+
+    // b_i =
+    
+    
     l_p = document.getElementById("list_pokemon"); // ポケモンのリスト
     intro = document.getElementById("intro"); // イントロ
 

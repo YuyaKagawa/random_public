@@ -50,6 +50,10 @@ let dtb; // html内に記述したテキストボックスの要素を取得
 let b_sr = null; // スタート・リセットボタン
 let b_sh_a = null; // 答えを表示/非表示ボタン
 let b_j = null; // 判定ボタン
+// let b_i = null;
+let b_hi = null;
+let b_d = null;
+
 
 let pid = null; // タイマーのプロセスID
 let timer = null; // タイマーオブジェクトinHTML

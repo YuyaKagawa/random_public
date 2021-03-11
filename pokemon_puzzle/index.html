@@ -16,15 +16,29 @@
         <script type="text/javascript" src="js/variable.js"></script>
         
         <div id = "intro">
-            <h1>初代ポケモン151匹スケルトン</h1>
-            「稲葉直貴@puzlab」氏が作成された、初代ポケモンのスケルトンをhtmlとjavascriptで実装することを試みました。<br>
-            偉大なる原典: <a href="https://twitter.com/puzlab/status/1302126737891893249">氏のtwitter投稿（2020年9月5日）</a><br>
-            本ページの制作者: kagawa yuya<br>
-            制作日: 2021年3月10日<br>
-            動作確認: Windows10 + Google Chrome
-        </div>
+            <h1>初代ポケモン151匹スケルトンを勝手にブラウザで遊べるようにしてみた</h1>
+            
+            準備ができたら「スタート」ボタンを押してスケルトンのプレイを始めましょう。<br>
+            マウスクリックや矢印キーでマスを選択し、マスに文字をキーボードで入力しましょう。<br>
+            やりきったと思ったら「判定」ボタンを押して、何マス埋められたかを確認できます。<br>
+            めざせ初代ポケモン151匹ゲット～ッ！
+
+            <div>
+                <input type="button" id="b_detail" value="詳細を表示" onclick="pb_detail();">
+            </div>
+        <!-- </div> -->
 
         <div id="howto">
+            
+        </div>
+
+
+
+        <div id="detail">
+            <h2>元ネタ</h2>
+            「稲葉直貴@puzlab」さんが作成されtwitterに投稿された、初代ポケモン151匹を使ったスケルトン<br>
+            偉大なる原典: <a href="https://twitter.com/puzlab/status/1302126737891893249">氏のtwitter投稿（2020年9月5日）</a><br>
+
             <h2>遊び方</h2>
             <h3>はじめるとき</h3>
             <ul>
@@ -52,8 +66,13 @@
                     解けたと思ったら押してください。</li>
                 <li>チェックリスト: 文字部分をクリックしても反応します。ご活用ください。</li>
                 <li>その他注意: <mark class="red">ページを再読み込みすると、入力内容が全て消えてしまいます。</mark></li>
-            </ul>            
-            めざせ初代ポケモン151匹ゲット～ッ！
+            </ul>
+
+            <h3>製作者</h3>
+            本ページの制作者: kagawa yuya<br>
+            制作日: 2021年3月10日<br>
+            動作確認: Windows10 + Google Chrome
+            
         </div>
 
         <input type="button" id="b_hide_info" value="情報を非表示" onclick="pb_hide_info();">
@@ -79,10 +98,10 @@
             <!-- <input type='text' size=6 maxlength=1 id='textbox' value="default" onkeyup="when_penter();"> -->
         </div>
         <div>
-            <input type="button" id="b_start_reset" value="スタート" onclick="pb_start_reset();">
+            <input type="button" id="b_judge" value="判定" onclick="pb_judge();">
             <!-- <input type="button" id="reset" value="リセット" onclick="reset();"> -->
             <input type="button" id="b_show_hide_answer" value="正解を表示" onclick="pb_show_hide_answer();">
-            <input type="button" id="b_judge" value="判定" onclick="pb_judge();">
+            <input type="button" id="b_start_reset" value="スタート" onclick="pb_start_reset();">
             
             <div id="timer">
                 タイマー部分のテキスト
