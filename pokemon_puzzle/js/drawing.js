@@ -50,7 +50,18 @@ function get_csv(args) {
     function split_csv(str){
         // csvの中身を読み込む関数
         var result = [];
-        var tmp = str.split("\r\n");
+
+        var tmp=null;
+
+        if (str.split("\r\n").length>1){
+            tmp = str.split("\r\n");
+        }
+        else if (str.split("\n").length>1){
+            tmp = str.split("\n");
+        }
+        else if (str.split("\r").length>1){
+            tmp = str.split("\r");
+        }
 
         for (var i=0;i<tmp.length;i++){
             result[i]=tmp[i].split(",");
@@ -61,6 +72,8 @@ function get_csv(args) {
 
     return new Promise(function(resolve,reject){
         var request = new XMLHttpRequest();
+
+
         request.open("GET",fname_csv,true);
         request.send(null);
 

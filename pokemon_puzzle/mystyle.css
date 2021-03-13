@@ -20,7 +20,8 @@ mark.orange{
 
 #list_pokemon{
     /* ポケモンのリスト */
-    height: 600;
+    width: 200px;
+    height: 600px;
     overflow: scroll;
     display: none;
     float: right;

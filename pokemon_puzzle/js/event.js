@@ -172,3 +172,12 @@ function rem_event() {
     document.removeEventListener("keydown",when_pkey); // キーを押すときのイベントを削除
     tb.removeEventListener("keyup",when_penter) // エンターキーのイベントを削除
 }
+
+window.addEventListener("beforeunload", function (e) {
+    // ブラウザバック、ページ再読み込み時に警告を出す
+    // 参考: https://stackoverflow.com/questions/38306510/alert-on-browser-back-button-click-or-page-refresh/38306612#38306612
+    var confirmationMessage = "\o/";
+    
+    (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    return confirmationMessage;                            //Webkit, Safari, Chrome
+});
