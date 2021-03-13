@@ -1,0 +1,11 @@
+theme: jekyll-theme-cayman
+twitter:
+  username: Yuya_Kagawa
+defaults:
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /img/logo.png
+        height: 118
+        width: 132

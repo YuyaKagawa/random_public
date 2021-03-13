@@ -1,0 +1,53 @@
+mark.red{
+    color: red;
+    background: none;
+    font-weight: bold;
+}
+
+mark.orange{
+    /* color: red; */
+    background: orange;
+    font-weight: bold;
+}
+
+#intro{
+    display: block;
+}
+
+#detail{
+    display: none;
+}
+
+#list_pokemon{
+    /* ポケモンのリスト */
+    height: 600;
+    overflow: scroll;
+    display: none;
+    float: right;
+}
+
+.p_l{
+    /* リスト中の各ポケモン */
+    margin: 0px;
+}
+
+#b_show_hide_answer{
+    /* 「答えを表示」ボタン */
+    display: none;
+}
+#b_judge{
+    /* 「判定」ボタン */
+    display: none;
+}
+
+#canvas_main{
+    float: none;
+}
+
+#canvas_answer{
+    display: none;
+}
+
+#timer{
+    display: none;
+}

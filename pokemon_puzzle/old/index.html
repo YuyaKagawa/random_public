@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <link rel="shortcut icon" href="#">
+        <link rel="stylesheet" href="mystyle.css">
+        <title>初代ポケモン151匹クロスワード？スケルトン？</title>
+        <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    </head>
+    <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/drawing.js"></script>
+        <script type="text/javascript" src="js/button.js"></script>
+        <script type="text/javascript" src="js/event.js"></script>
+        <script type="text/javascript" src="js/list.js"></script>
+        <script type="text/javascript" src="js/variable.js"></script>
+        
+        <div id = "intro">
+            <h1>初代ポケモン151匹スケルトンを勝手にブラウザで遊べるようにしてみた</h1>
+            
+            準備ができたら一番下の<input type="button" value="スタート">を押してスケルトンのプレイを始めましょう。<br>
+            マウスクリックや←↓↑→キーでマスを選択し、マスに文字をキーボードで入力しましょう。<br>
+            やりきったと思ったら<input type="button" value="判定">を押して、何マス埋められたかを確認できます。<br>
+            チェックリストも活用して、めざせ初代ポケモン151匹ゲット～ッ！
+
+            <div>
+                <input type="button" id="b_detail" value="詳細説明を表示" onclick="pb_detail();">
+            </div>
+        </div>
+
+        <div id="detail">
+            <h2>元ネタ</h2>
+            「稲葉直貴@puzlab」さんが作成、twitterに投稿された、初代ポケモン151匹を使ったスケルトン<br>
+            偉大なる原典: <a href="https://twitter.com/puzlab/status/1302126737891893249">氏のtwitter投稿（2020年9月5日）</a><br>
+
+            <h2>想定プレイ時間</h2>
+            ノーヒントで3時間程度、チェックボックスを使いながらで2時間程度
+
+            <h2>遊び方</h2>
+            <h3>はじめるとき</h3>
+            <ul>
+                <li><mark class="red">十分にブラウザのウィンドウを大きくしてください。<br>
+                マスが小さいと思ったら、ウィンドウを大きくしてページを再読み込みすることをおすすめします。</mark></li>
+                <li><input type="button" value="スタート">を押して、スタートしてください。</li>
+            </ul>
+
+            <h3>プレイしているとき</h3>
+            <ul>
+                <li>流れ: マスを選択し、入れたい文字をキーボードで入力します。</li>
+                <li>マスの選択方法: <mark class="red">どのマスも選択されていない場合、マウスクリックして選択</mark>します。<br>
+                    <mark class="orange">選択されたマスはオレンジ色で表示</mark>されます。<br>
+                    どこかの<mark class="red">マスが選択されている場合は、マウスクリックもしくはキーボードの←↓↑→キーで移動可能</mark>です。
+                </li>
+                <li>入力方法: マスは1つだけ選択できます。<br>
+                    <mark class="red">全角ひらがな入力</mark>を想定しています。<br>
+                    大文字・小文字の区別はありません。大文字で入力する方が簡単です。<br>
+                    濁点・半濁点・ダッシュは区別します。
+                </li>
+                <li>マスの文字消去方法: 右クリックで消去することができます。<br>
+                    また、マスを選択して新たな文字を入力して上書きすることが可能です。</li>
+                <li><input type="button" value="判定">: ボタンを押すと、正解かどうかを判定します。
+                    解けたと思ったら押します。</li>
+                <li><input type="button" value="正解を表示">: ボタンを押すと、下に正解を表示します。
+                    どうしても解けなくなったら押します。</li>        
+                <li><input type="button" value="リセット">: ボタンを押すと、正解かどうかを判定せずにゲームを終了します。
+                    どうしようもなくなったら実行します。</li>
+                <li><input type="button" value="詳細説明を表示"><input type="button" value="詳細説明を非表示">: ボタンを押すと、詳細説明部分を省略できます。</li>                
+                <li><input type="button" value="情報を表示"><input type="button" value="情報を非表示">: ボタンを押すと、プレイに関係のない部分を表示/非表示できます。</li>
+                <li>チェックリスト: 文字部分をクリックしても反応します。ご活用ください。
+                    チェックリストの50音順では、濁点・半濁点は区別していません。見落としにご注意ください。</li>
+                <li>注意: タイプミス判定は一切ありません。逐一ミスがないかを確認しながら進めます。<br>
+                    <mark class="red">ページを再読み込みすると、入力内容が全て消えてしまいます。</mark></li>
+                <li>TIPS: Ctrl+Fでチェックリスト内の文字を検索すると、快適にできます。</li>
+            </ul>
+
+            <h2>製作者</h2>
+            本ページの制作者: kagawa yuya<br>
+            制作日: 2021年3月10日<br>
+            動作確認: Windows10 + Google Chrome
+            
+        </div>
+
+        <input type="button" id="b_hide_info" value="情報を非表示" onclick="pb_hide_info();">
+
+        <hr>
+
+        <div id="list_pokemon"></div>
+
+
+        <div>
+            <canvas id="canvas_main" height=600 width=600 tabindex="1"></canvas>
+        </div>
+
+
+        <div id="div_textbox">
+            <!-- エンターキーを押したときの挙動は、jsの方で定義済み -->
+            <input type='text' size=20 maxlength=2 id='textbox' value="ここにマスの値が入ります">
+          
+        </div>
+        <div>
+            <input type="button" id="b_judge" value="判定" onclick="pb_judge();">
+            <input type="button" id="b_show_hide_answer" value="正解を表示" onclick="pb_show_hide_answer();">
+            <input type="button" id="b_start_reset" value="スタート" onclick="pb_start_reset();">
+            
+            <div id="timer">
+                タイマー部分のテキスト
+            </div>
+        </div>
+
+        <div>
+            <canvas id="canvas_answer" height=600 width=600 tabindex="1"></canvas>
+        </div>
+    </body>
+</html>
