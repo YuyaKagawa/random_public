@@ -1,272 +1,213 @@
-// 後に値を取得する、canvas関連の変数
-let canvas;
-let context;
-let cw;
-let ch;
-let sw; // 格子の中の一つの四角の横幅
-let sh; // 格子の中の一つの四角の縦幅
-const snum = 32; // 格子の中の四角の数
-let cmar;
+$(document).ready(function(){
+    // htmlが読み込めた後に実行
+    // canvas_mainの黒枠だけ表示する
 
-const ccolor_bg = "gray"; // canvasの背景色
-const ccolor_gs = "darkblue"; // canvasの格子の枠線の色
-let ccolor_gb = "white"; // canvasの格子の背景の色
-const ccolor_fd = "black"; // canvas内のデフォルトの文字の色
+    canvasm = document.getElementById("canvas_main");
+    contextm = canvasm.getContext("2d");
+    canvasa = document.getElementById("canvas_answer");
+    contexta = canvasa.getContext("2d");
 
-const fname_d="./data/csv/default_sq.csv"; // csvファイル名、最初の状態
-const fname_a="./data/csv/answer_sq.csv"; // csvファイル名、答え
+    canvasm.width = Math.min(window.innerHeight,window.innerWidth)-100;
+    canvasm.height = Math.min(window.innerHeight,window.innerWidth)-100;
+    canvasa.width = Math.min(window.innerHeight,window.innerWidth)-100;
+    canvasa.height = Math.min(window.innerHeight,window.innerWidth)-100;
 
-let Gd = null; // デフォルトの格子情報
-let Gn = null; // 現在の格子情報
-let Ga = null; // 答えの格子情報
+    // canvas関連の変数、canvas_mainとcanvas_answerで共通
+    cw = canvasm.width; // canvasの横幅
+    ch = canvasm.height; // canvasの縦幅
+    cmar = 10 // canvas上の端（上下左右）のマージン
+    sw = (cw-2*cmar) / snum; // 格子中の1マスの幅
+    sh = (ch-2*cmar)/snum; // 格子中の1マスの高さ
+    tb = document.getElementById("textbox"); // テキストボックスの要素を取得
+    b_sr = document.getElementById("b_start_reset"); // スタート・リセットボタンの要素を取得
+    b_sh_a = document.getElementById("b_show_hide_answer"); // 答えを表示/非表示ボタンの要素を取得
+    b_j = document.getElementById("b_judge"); // 判定ボタンの要素を取得
 
-var rowi_p = null; // 前回指した四角はrowi行目
-var colj_p = null; // 前回指した四角はcolj列目
-var rowi = null; // 今指している四角はrowi行目
-var colj = null; // 今指している四角はcolj列目
+    b_hi = document.getElementById("b_hide_info"); // 情報表示ボタンの要素を取得
+    b_d = document.getElementById("b_detail"); // 詳細表示ボタンの要素を取得
+    
+    l_p = document.getElementById("list_pokemon"); // ポケモンのリスト
+    intro = document.getElementById("intro"); // イントロ
 
-let eflag = {}; // イベントフラグのON/OFFを管理する
-eflag["mousemove"]="OFF";
-eflag["mouseover"]=null;
-eflag["mouseout"]=null;
+    timer = document.getElementById("timer"); // タイマー
 
-// eflag["click"]="OFF";
+    // promiseで順番に実行
+    // 1. canvas_mainとcanvas_answerを描画
+    // 2. デフォルト、作業用、正解のcsvを読み込む
+    // 3. 変数に代入する
 
-let tb; // html内に記述したテキストボックスの要素を取得
-let dtb; // html内に記述したテキストボックスの要素を取得
-let v; // クリックしたマスの要素
+    Promise.resolve()
+        .then(prep_canvas.bind(this, { "canvas": canvasm, "context": contextm }))
+        .then(prep_canvas.bind(this, { "canvas": canvasa, "context": contexta }))
+        .then(get_csv.bind(this, { "fname_csv": fname_d,"list": false }))
+        .then(get_csv.bind(this, { "fname_csv": fname_a,"list": false }))
+        .then(get_csv.bind(this, { "fname_csv": fname_l,"list": true}))
+        .then(listup)
+});
 
-function reset(){
-    // リセットボタンを押したときの挙動
-    var do_reset = confirm("リセットしますか");
+function start() {
+    // スタートボタンを押したときに、スタートする
+    // $(document).ready()で実行した後に実行されることを想定している
+    // timerはpb_start_reset()の中で記述
 
-    if (do_reset==true){
-        var message="リセットしました";
+    // 3. デフォルトのcsvの内容に基づいて、canvas_mainに格子全体を描画
+    // 4. 正解のcsvの内容に基づいて、canvas_answerに格子全体を描画
+    // 5. canvas_mainに、イベント（マウスイン、マウスアウト、マウスオーバー、マウスクリック）を登録する
 
-        Gn=Gd.map(inner=>inner.slice());
-        
-        // Promise.resolve(Gn).then(draw_grid.bind(Gn)).then(alert(message));
-        draw_grid(Gn);
-
-        alert(message);
-    }else{
-    }
+    Promise.resolve()
+        .then(draw_grid.bind(this, { "context": contextm, "Grid": G["d"] }))
+        .then(draw_grid.bind(this, { "context": contexta, "Grid": G["a"] }))
+        .then(res_event)    
 }
 
-function hiratokana(hiragana) {
-    // ひらがなをカタカナに変換する関数
-    // 参考: JavaScriptでカタカナをひらがなに変換する(その逆も) - Qiita, 
-    // https://qiita.com/mimoe/items/855c112625d39b066c9a
 
-    return hiragana.replace(/[\u3041-\u3096]/g, function(match) {
-        var chr = match.charCodeAt(0) + 0x60;
-        return String.fromCharCode(chr);
-    });
-}
 
-function get_csv(fname_csv,first=false){
-    // csvを読み込んだ結果を取得する関数
 
-    function split_csv(str){
-        // csvの中身を読み込む関数
-        var result = [];
-        var tmp = str.split("\r\n");
 
-        for (var i=0;i<tmp.length;i++){
-            result[i]=tmp[i].split(",");
-        }
 
-        return result;
-    }
 
-    return new Promise(function(resolve,reject){
-        var request = new XMLHttpRequest();
-        request.open("GET",fname_csv,true);
-        request.send(null);
 
-        request.onload = function(){
-            result = split_csv(request.responseText);
-            resolve(result);
-        };
-    });
-}
 
-function prep_canvas_main(){
-    // mainのcanvasを用意する関数
-    // promiseで実行
 
-    return new Promise(function (resolve,reject){
-        context.textBaseline = "top";
-        context.fillStyle = ccolor_bg; // 四角の色
-        
-        // 左からのサブセット、上からのサブセット、幅、高さの四角の枠線を描く
-        context.fillRect(0,0,canvas.width,canvas.height); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function assign_value(args){
+    // Gに、get_csvで読み込んだ格子情報を代入する
+
+    // console.log(`value = ${value}`);
+
+    // console.log(`args = ${args.keys()}`);
+    // console.log(`args = ${Object.keys(args)}`);
+
+    // console.log(`args["Grid"] = ${args["Grid"]}`);
+
+    return new Promise(function (resolve, reject) {
+        // 2次元配列の値コピーには工夫が必要
+
+        const r = args["r"];
+        // console.log(`r = ${r}`);
+
+        // G[`${ args["Grid"] }`]=r;
+
+        console.log(`assign value, G${args["Grid"]} = ${G[args["Grid"]]}`);
+
+        // console.log(G[d] = $G["d"]);
+
+
+
+        // console.log(`args["Grid"] = ${args["Grid"]}`);
+
+        // console.log(`G["d"] = ${G["d"]}`);
+
+        // console.log(`Gd[0] = ${Gd[0]}`);
+
+        // Gd = result.map(inner=>inner.slice());
+        // Gn = result.map(inner=>inner.slice());                
+
+        // Ga = result.map(inner=>inner.slice()); 
+
+        // resolve(Gd);
         resolve();
-    });    
+    });
 }
 
-function draw_sq_byij(Grid,i,j,ccolor_gb="white",bold=true){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // var message = "リセットしました";
+
+        // Gn = Gd.map(inner => inner.slice());
+    
+        // Promise.resolve(Gn).then(draw_grid.bind(Gn)).then(alert(message));
+        // draw_grid(Gn);
+
+        // const document.getElementById("ca");
+        
+        // show_answer
+    // }
+    // else { 
+    // }
+
+
+
+
+
+                                // context.font = `bold ${sh}px serif`; // 残りの部分
+                // context.font = `${sh}px serif`; // 残りの部分
+
+                                // context.textBaseline = "top";
+        // context.fillStyle = ccolor_bg; // 四角の色
+
+        // context.fillRect(0, 0, canvas.width, canvas.height);
+
+// function draw_sq_byij(Grid,i,j,ccolor_gb="white",bold=true){
     // console.log(`draw_sq_byij!`);
     // console.log(`Grid[i][j] = ${Grid[i][j]}`);
 
-    // 格子Gと、i行j列目という情報が与えられたときの、i行j列目の四角を描く関数
-    if ((Grid[i][j]=="\u{3000}")||(Grid[i][j]==" ")){ // 全角空白は、枠を表示しない
-    }
-    else{ // 全角空白以外のとき、枠を表示
-        context.strokeStyle = ccolor_gs;
-        context.strokeRect(cmar+j*sh,cmar+i*sw,sh,sw);
-        context.fillStyle=ccolor_gb; // 枠があるときの背景色
-        context.fillRect(cmar+j*sh,cmar+i*sw,sh,sw);
 
-        if (Grid[i][j]=="\u{25EF}") { // ◯の場合は、もうなにもしない
-        }
-        else{ // 文字の場合は、文字を表示
-            if (bold==true){ // 太字のときの設定
-                context.font = `bold ${sh}px serif`; // 残りの部分    
-            }
-            else{
-                context.font = `${sh}px serif`; // 残りの部分
-            }
-
-            context.fillStyle=ccolor_fd;
-            context.fillText(Grid[i][j],cmar+j*sh,cmar+i*sw);
-        }
-    }
-}
-
-function xy2ij(x,y){
-    // x,yを受け取り、i,jに変換する
-    // x,yからi行j列目という情報を抽出して代入する
-    // x,yが範囲外の場合、i,jはそれぞれnullを代入する
-    
-    if (x<cmar || x>=cw-cmar){ // xが格子の範囲外の場合
-        colj=null;
-    }else{
-        colj = Math.floor((x-cmar)/sw);
-    }
-
-    if (y<cmar || y>=ch-cmar){ // yが格子の範囲外の場合
-        rowi=null;
-    }else{
-        rowi = Math.floor((y-cmar)/sh);
-    }
-
-      
-}
-
-// function change_sq_mover(context,x,y){
-function change_sq_mover(Grid,x=null,y=null,ij=null){
-    // マウスがオーバーしている四角の属性を、変化させる
-    // canvas上でのx,y座標を与えることで、その部分の四角を再描画する関数
-    // 条件分岐は2つ
-    // 1. 以前のx,yが格子の範囲の内にある場合
-    // 2. 現在のx,yが格子の範囲の内にある場合
-    
-    if (ij==null){ // ijが引数として与えられていない場合
-        xy2ij(x,y);
-    }
-    else if (ij!=null){ // ijが引数として与えられている場合
-        rowi=ij[0];
-        colj=ij[1];
-    }
-    
-    if (rowi_p!=null && colj_p!=null){
-        // 1. 以前のx,yが格子の範囲の内にあるとき
-
-        if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
-        }
-        else if ((rowi!=rowi_p) || (colj!=colj_p)){ // 以前と異なる四角を指している場合、以前の四角を消す
-            if (["\u{3000}","\u{25EF}"].indexOf(Gd[rowi_p][colj_p])<0){ // もし、デフォルトの文字だったら
-                draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=true); // 太字で表示
-            }
-            else{ // デフォルトの文字ではない場合
-                draw_sq_byij(Grid,rowi_p,colj_p,ccolor_gb="white",bold=false);
-            }
-        }
-    }
-
-    if (rowi!=null && colj!=null){
-        // 2. 現在のx,yが格子の範囲の内にある場合
-
-        if ((rowi==rowi_p) && (colj==colj_p)){ // 以前と同じ四角を指している場合、何もしない
-        }
-        else if ((rowi!=null && rowi!=rowi_p) || (colj!=null && colj!=colj_p)){ // 以前と異なる四角を指している場合、現在の位置に四角を表示
-            if (["\u{3000}","\u{25EF}"].indexOf(Gd[rowi][colj])<0){ // もし、デフォルトの文字だったら
-                draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=true);
-            }
-            else{ // デフォルトの文字ではない場合
-                draw_sq_byij(Grid,rowi,colj,ccolor_gb="orange",bold=false);
-            }
-        }
-    }
-
-    rowi_p=rowi;
-    colj_p=colj;
-}
-    
-function draw_grid(Grid) {
-    return new Promise(function (resolve,reject){
-        // 枠線の描画
-        for (let i=0;i<snum;i++){
-            for (let j=0;j<snum;j++) {
-                draw_sq_byij(Grid,i,j,ccolor_gb="white",bold=true); // 四角を描く
-            }
-        }
-
-        resolve();
-    });
-}
-
-function when_mmove(e){
-    // canvas内でマウスが動いているとき
-    // 厳密には、canvas外→内、canvas内→外の動作も取る
-
-    change_sq_mover(Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
-}
-
-function when_choosesq(){
-    // マスを選んだときに実行される関数
-    // when_click()とmovesq_byarrow()内で実行
-
-    if (rowi==null || colj==null){ // 格子外をクリックしたとき
-        tb.value = "";
-        tb.readOnly = true;        
-    }
-    else{ // 格子内をクリックしたとき
-        var vd = Gd[rowi][colj]; // デフォルトのマスの要素を取得
-        var vn = Gn[rowi][colj]; // 現在のマスの要素を取得
-
-        // console.log(`rowi = ${rowi}, colj = ${colj}`);
-        // console.log(`Gd[${rowi}][${colj}] = ${Gd[rowi][colj]}`);
-        // console.log(`Gn[${rowi}][${colj}] = ${Gn[rowi][colj]}`);
-        // console.log(`tb.readOnly = ${tb.readOnly}`);
-
-        // console.log(`Gd[0] = ${Gd[0]}`);
-        // console.log(`Gn[0] = ${Gn[0]}`);
-        
-        // Gn[0][1]="ぽ";
-
-        // console.log(`Gd[0] = ${Gd[0]}`);
-        // console.log(`Gn[0] = ${Gn[0]}`);
-
-        if (vd=="\u{25EF}"){ // もともと編集可能マス（not デフォルト文字あり、not 余白）の場合
-            tb.readOnly = false; // 編集可能にする
-            tb.focus(); // テキストボックスにフォーカスをあわせる 
-
-            if (vn=="\u{25EF}"){ // 現在空白の場合
-                tb.value = "";
-            }
-            else{ // 現在空白ではない場合
-                tb.value = `${vn}`; // テキストボックスに、クリックしたマスの値を入れる
-                // tb.value = `${vn}`; // テキストボックスに、クリックしたマスの値を入れる
-            }
-        }
-        else{ // もともと編集可能ではない場合（デフォルト文字あり、余白）
-            tb.readOnly = true;
-            tb.value = "";
-        }
-
-
+        // context.strokeStyle = ccolor_gs;
+        // context.strokeRect(cmar+j*sh,cmar+i*sw,sh,sw);
+        // context.fillStyle=ccolor_gb; // 枠があるときの背景色
+        // context.fillRect(cmar+j*sh,cmar+i*sw,sh,sw);
+            // context.fillStyle=ccolor_fd;
+            // context.fillText(Grid[i][j],cmar+j*sh,cmar+i*sw);
 
         // if (vd=="\u{3000}"){ // 格子内でマスのないところは変更不可にする
             // console.log("vd=\u{3000}");
@@ -293,18 +234,6 @@ function when_choosesq(){
             // }
 
         // }
-    }
-}
-
-
-
-function when_click(e) {
-    // canvas内でクリックしたとき
-
-    xy2ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
-
-    when_choosesq();
-
     // if (rowi==null || colj==null){ // 格子外をクリックしたとき
     //     tb.value = "";
     //     tb.readOnly = true;
@@ -333,26 +262,6 @@ function when_click(e) {
     //         tb.readOnly = false; // 
     //     }
     // }
-
-    if (eflag["mousemove"] == "ON"){
-        eflag["mousemove"] = "OFF";
-        canvas.removeEventListener("mousemove",when_mmove); // クリックのイベントを削除
-    }
-    else{
-        change_sq_mover(Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
-
-        if (rowi!=rowi_p || colj!=colj_p){
-            eflag["mousemove"] = "ON";
-            canvas.addEventListener("mousemove", when_mmove, false);    
-        }
-    }    
-}
-
-function when_penter(e){
-    // テキストボックスでキーが押されたとき
-    // ここでエンターキーを検出する
-    // 現時点では実はエンターキーではなく、文字を入力途中でも反応する
-
     // console.log(`${e.key}`);
 
     // console.log(`when_penter, tb.value.length = ${tb.value.length}`);
@@ -360,248 +269,6 @@ function when_penter(e){
     // if (tb.value.length==1 && tb.readOnly==false && e.key=="Enter"){ // テキストボックスが入力可能状態の場合
     // if (tb.value.length==1 && tb.readOnly==false && e.key=="Process"){ // テキストボックスが入力可能状態の場合
     // if (tb.value.length>1 && tb.readOnly==false && (e.key=="Process" || e.key=="Enter")){ // テキストボックスが入力可能状態の場合
-    if (tb.value.length>=1 && tb.readOnly==false){ // テキストボックスが入力可能状態の場合
-    // if (tb.readOnly==false && e.key=="Process"){ // テキストボックスが入力可能状態の場合
-
-        const t = tb.value[tb.value.length-1];
-        // Gn[rowi][colj]=hiratokana(tb.value);
-        Gn[rowi][colj]=hiratokana(t);
-
-        // console.log(`t = ${t}`);
-        // console.log(`Gn[rowi][colj] = ${Gn[rowi][colj]}`);
-
-        draw_sq_byij(Gn,rowi,colj,ccolor_gb="orange",bold=false);
-    }else{
-        // console.log("else!");
-    }
-}
-
-function movesq_byarrow(key_arrow){
-    // 矢印キーを押して、マスを移動させる
-
-    let rowi_c = rowi; // 行方向の移動先の候補
-    let colj_c = colj; // 列方向の移動先の候補
-    
-
-    if (key_arrow=="Up"){
-        rowi_c = Math.max(rowi_c-1,0);
-    }
-    else if (key_arrow=="Right"){
-        colj_c = Math.min(colj_c+1,snum-1);
-    }
-    else if (key_arrow=="Down"){
-        rowi_c = Math.min(rowi_c+1,snum-1);
-    }
-    else if (key_arrow=="Left"){
-        colj_c = Math.max(colj_c-1,0);
-    }
-
-    if (Gd[rowi_c][colj_c] == "\u{3000}"){
-        change_sq_mover(Gn,x=null,y=null,ij=[rowi,colj]);
-    }
-    else{
-        change_sq_mover(Gn,x=null,y=null,ij=[rowi_c,colj_c]);
-    }        
-
-    when_choosesq();
-}
-
-function when_p(e){
-    // ドキュメント上で何かキーを押したときの挙動
-    // e.preventDefault();
-
-    if (e.key.substr(0,5)=="Arrow"){ // もし矢印キーを押したら
-        movesq_byarrow(e.key.substr(5,e.key.length)); // マスを移動する
-    }
-}
-
-function assign_value(){
-    // Gに、get_csvで読み込んだ格子情報を代入する
-
-    return new Promise(function (resolve, reject) {
-        // 2次元配列の値コピーには工夫が必要
-        Gd = result.map(inner=>inner.slice());
-        Gn = result.map(inner=>inner.slice());                
-
-        Ga = result.map(inner=>inner.slice()); 
-
-        resolve(Gd);
-
-    });
-}
-
-function when_rclick(e){
-    xy2ij(e.offsetX,e.offsetY); // 四角がi行j列目であることを取得
-
-    if (rowi==null || colj==null){ // 格子外をクリックしたとき
-    }
-    else{ // 格子内をクリックしたとき
-        vd = Gd[rowi][colj]; // デフォルトのマスの要素を取得
-        
-        if (vd=="\u{3000}"){
-        }
-        else if (vd=="\u{25EF}"){
-            Gn[rowi][colj]=vd;
-            draw_sq_byij(Gn,rowi,colj,ccolor_gb="white",bold=false)
-        }
-
-        vn = Gn[rowi][colj]; // 現在のマスの要素を取得
-        
-        if (vd=="\u{3000}" || vd!="\u{25EF}"){ 
-            // 格子内でも、マスのないところは変更不可にする
-            // マスがあっても、デフォルトで値の入っているところは変更不可にする
-    
-            tb.value = "";
-            tb.readOnly = true;    
-        }
-        else{ // 格子内で、マスがあり、さらに有効な文字の場合
-
-            if (vn=="\u{25EF}"){
-                tb.value = "";
-            }
-            else{
-                tb.value = `${vn}`; // テキストボックスに、クリックしたマスの値を入れる
-            }
-
-            tb.focus(); // テキストボックスにフォーカスをあわせる
-            tb.readOnly = false; // 
-        }
-    }
-
-
-    if (eflag["mousemove"] == "ON"){
-        eflag["mousemove"] = "OFF";
-        canvas.removeEventListener("mousemove",when_mmove); // クリックのイベントを削除
-    }
-    else{
-        change_sq_mover(Gn,e.offsetX,e.offsetY); // カーソルの合った四角を描画する
-
-        if (rowi!=rowi_p || colj!=colj_p){
-            eflag["mousemove"] = "ON";
-            canvas.addEventListener("mousemove", when_mmove, false);    
-        }
-
-    }
-}
-
-function res_event(args){
-    // イベントの登録をする関数
-
-    return new Promise(function (resolve, reject) {
-        // canvas内でマウスを動かしたとき
-        // canvas上ではまず、右クリックを無効化する
-        canvas.addEventListener('contextmenu', e => e.preventDefault());
-        canvas.addEventListener('contextmenu', when_rclick,false); // →クリックを押したときに実行
-        
-        eflag["mousemove"] = "ON";
-        canvas.addEventListener("mousemove", when_mmove, false);
-
-        canvas.addEventListener("click",when_click,false); // canvas上でクリックしたとき
-
-        // canvas上で矢印キーを押したとき
-        // これはキーを押したタイミングで
-        // まずページ全体で、矢印キーを無効化する
-        document.addEventListener("keydown", e => {
-            if (e.key.substr(0,5)=="Arrow"){
-                e.preventDefault();
-            }
-        },false);
-
-        document.addEventListener("keydown",when_p,false);
-        // document.addEventListener("keydown",when_p,false);
-
-        // テキストボックスにカーソルが合っているとき、Enterキーを押したとき
-        // これはキーを離したタイミングで
-        tb.addEventListener("keyup", e=>{
-            if (e.key=="Enter" || e.key=="Process"){
-                // console.log("ENTERRRRRRRRRRRRRR");
-                when_penter(e);
-            }
-        },false);
-
-
-        resolve();
-    });
-}
-
-
-$(document).ready(function () {
-    // htmlが読み込めた後に実行
-
-    canvas = document.getElementById("canvas_main");
-    context = canvas.getContext("2d");
-    cw = canvas.width; // canvasの横幅
-    ch = canvas.height; // canvasの縦幅
-    cmar = 10 // canvas上の端（上下左右）のマージン
-    sw = (cw-2*cmar) / snum; // 格子中の1マスの幅
-    sh = (ch-2*cmar)/snum; // 格子中の1マスの高さ
-    dtb= document.getElementById("div_textbox"); // 
-    tb = document.getElementById("textbox"); // 
-
-
-    // promiseで順番に実行
-    // 1. canvas_mainを描画
-    // 2. デフォルトの状態のcsvを読み込む
-    // 3. デフォルトのcsvの内容に基づいて、格子全体を描画
-    // 4. イベント（マウスイン、マウスアウト、マウスオーバー、マウスクリック）を登録する
-    Promise.resolve().then(prep_canvas_main)
-        .then(get_csv.bind(this, fname_d))
-        .then(assign_value)
-        // .then(show.bind())
-        .then(draw_grid.bind(Gd))
-        .then(res_event);
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -619,7 +286,18 @@ $(document).ready(function () {
 
 
 
+// console.log(`rowi = ${rowi}, colj = ${colj}`);
+        // console.log(`Gd[${rowi}][${colj}] = ${Gd[rowi][colj]}`);
+        // console.log(`Gn[${rowi}][${colj}] = ${Gn[rowi][colj]}`);
+        // console.log(`tb.readOnly = ${tb.readOnly}`);
 
+        // console.log(`Gd[0] = ${Gd[0]}`);
+        // console.log(`Gn[0] = ${Gn[0]}`);
+        
+        // Gn[0][1]="ぽ";
+
+        // console.log(`Gd[0] = ${Gd[0]}`);
+        // console.log(`Gn[0] = ${Gn[0]}`);
 
 
 
