@@ -1,0 +1,26 @@
+body{
+    /*  */
+    text-align: center;
+    /* height: 100%;
+    width: 100%; */
+    
+    /* 本文は中央揃え
+    
+    margin-right: auto;
+    margin-left: auto; */
+}
+
+/* ボタン */
+#button{
+    display: block;
+    margin: auto;
+}
+
+/* ランドルト環 */
+#landolt{ 
+    display: none;
+    margin: auto;
+
+    /* 回転 */
+    transform: rotate(0.0turn);
+}
