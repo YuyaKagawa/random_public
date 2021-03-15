@@ -1,0 +1,7 @@
+* linguist-vendored
+*.py linguist-vendored=false
+
+
+#src/main/resources/static/* linguist-vendored
+#documented_code.py linguist-documentation=true
+#*.py linguist-language=Python
