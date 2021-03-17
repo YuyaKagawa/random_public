@@ -15,11 +15,12 @@ function prep_card40(){
 }
 
 
-function draw_card1(card,pos){
+function draw_card1(card_img,pos){
     // カード1枚を描画する
-    // カードの画像オブジェクトはcard
+    // カードの画像オブジェクトはcard_img
     // posでポジション指定
-
+    
+    context.drawImage(card_img,pos["x1"],pos["y1"],cscale*caw,cscale*cah);
 }
 
 function draw_button(n){

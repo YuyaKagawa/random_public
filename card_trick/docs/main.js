@@ -8,6 +8,12 @@ let bpos = Array(3); // 3つのボタンの位置の配列、[x1,y1,x2,y2]
 
 let cpos = Array(21); // 21枚のカードの位置
 
+let cscale = null; // カードの画像のスケール、0-1
+let caw = 108; // カードの画像の幅
+let cah = 172; // カードの画像の高さ
+// let cabw = 273; // カード（裏面）の画像の幅
+// let cabh = 400; // カード（裏面）の画像の高さ
+
 const Suit = ["s","h","d","c"]; // トランプのスート
 
 let list_card40 = Array(40); // 「スーツ+数字」で表された40枚のトランプのリスト
@@ -24,7 +30,8 @@ $(document).ready(function(){
     
     cmar = Math.min(canvas.width,canvas.height)/30; // マージン
     colw = (canvas.width-2*cmar)/3-2*cmar; // 1列の幅
-
+    // cscale = Math.min(canvas.width,canvas.height)/30; // スケール
+    cscale = 0.1; // スケール
 })
 
 function choose_random(){
@@ -52,7 +59,7 @@ function choose_random(){
         
         
         console.log(list_card21_img[t]);
-        
+
         list_card21_img[t].onload = function(){
             // var x = Math.random()*(canvas.width-2*cmar)+cmar;
             var x = (t%3)*(canvas.width-2*cmar)/3+cmar;
@@ -61,7 +68,6 @@ function choose_random(){
             
             // var y = Math.random()*(canvas.height-2*cmar)+cmar;
             
-            context.drawImage(list_card21_img[t],x,y,50,50*list_card21_img[t].height/list_card21_img[t].width);
         }
 
         // img.onload = function(){
