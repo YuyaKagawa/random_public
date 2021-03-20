@@ -1,0 +1,386 @@
+            // var image = new Image(); // 画像オブジェクト
+
+            // image.onload = function(){
+            //     list_card40_img[ind_c] = image; // 画像オブジェクト
+            // }
+
+            // var img = new Image(); // 画像オブジェクト
+
+
+            // img.onload = finish(ind_s,n);
+
+            // img.src = `img/${cname}.gif`;
+
+            // list_card40_img[ind_c].onload = function(){
+            //     list_card40_img[ind_c].src = `img/${cname}.gif`;
+            //     console.log(`prep_card40 first, list_card40_img[${i}].src = ${list_card40_img[i].src}`);
+            // }
+
+            // console.log(`img = ${img}`);
+
+
+
+            // img.onload = function(){
+            //     console.log("onload! ");
+            //     // alert("onload! ");
+                
+            // }
+
+
+    // for (let i=0;i<40;i++){
+    //     console.log(`prep_card40, list_card40_img[${i}].src = ${list_card40_img[i].src}`);
+    // }
+
+// var img = new Image(); // 画像
+// img.src = "img/back.gif"; // 画像のソース
+
+
+
+    // console.log(`bpos = ${bpos[ind_b]["x1"]}`);
+
+    // console.log([...Array(40).keys()]);
+
+    // const list_card21 = choose_random();
+
+    // var colw = (canvas.width-2*cmar)/3; 
+
+    // for (let c=0;c<3;c++){ // ボタンの表示
+    //     // context.fillStyle = "red";
+
+    //     bpos[c]=[x,y,x+w,y+h];
+
+    //     // context.font = "50px Comic Sans MS";
+    //     // context.fillText("ボタン",x,canvas.height);
+    //     context.fillStyle = "yellow";
+
+    //     context.strokeRect(x,y,w,h);
+    //     context.fillRect(x,y,w,h);
+    // }
+
+    // choose_random();
+
+    // res_event();
+    // Math.random()*list_number.length
+    
+    // for (let i=0;i<21;i++){
+    // for (let i=0;i<1;i++){
+    //     console.log(list_card21_img[i]);
+        // context.drawImage(list_card21_img[i],i*100,i*100,50,50*list_card21_img[i].height/list_card21_img[i].width);
+
+    //     let list_img = Array();
+
+        // var img = list_card21_img[i];
+
+        // console.log(`${img}`);
+
+        // context.drawImage(img,i*50,i*50,50,50*img.height/img.width);
+
+    //     var img = new Image(); // 画像
+    //     // img.src = `img/s01.gif`; // 画像のソース
+        
+    //     // console.log(img.src);
+
+    //     img.onload = function(){
+    //         img.src = `img/${list_card21[i]}.gif`; // 画像のソース
+    //     }
+
+
+    //     // console.log(img.height,img.width);
+        
+    //     // img.onload = function(){  
+    //         // img.src = `img/back.gif`; // 画像のソース
+
+    //         // console.log(img.src);
+
+
+    //         // context.drawImage(img,i*100,i*100,50,50*img.height/img.width);
+    //     // }
+    //     // context.drawImage(img,i,i);
+        
+    // }
+
+    // console.log("when_mout!");
+
+    // for (let ind_b=0;ind_b<3;ind_b++){
+    //     if ((bpos[ind_b]["x1"]<=e.offsetX)&&
+    //     (bpos[ind_b]["x2"]>e.offsetX)&&
+    //     (bpos[ind_b]["y1"]<=e.offsetY)&&
+    //     (bpos[ind_b]["y2"]>e.offsetY)){
+    //         console.log(`button ${ind_b+1} mouseover!`);
+    //     }
+    // }
+
+
+// function when_mout(e){
+//     // マウスオーバーしているとき
+//     // ボタン上にカーソルがあるとき
+//     for (let ind_b=0;ind_b<3;ind_b++){
+//         if ((bpos[ind_b]["x1"]<=e.offsetX)&&
+//         (bpos[ind_b]["x2"]>e.offsetX)&&
+//         (bpos[ind_b]["y1"]<=e.offsetY)&&
+//         (bpos[ind_b]["y2"]>e.offsetY)){
+//             console.log(`button ${ind_b+1} mouseover!`);
+//         }
+//     }
+// }
+
+            // console.log(`list_card21_img[${i}].src = ${list_card21_img[i].src}`);
+
+            // list_card21_img[i].addEventListener("load",function(){
+                // console.log(`list_card21_img[${i}] = ${list_card21_img[i]}`);
+    
+                // nloaded++;
+    
+                // if (nloaded==21){ // 21枚全ての画像が読み込めたら表示        
+                //     for (let j=0;j<21;j++){
+                //         var x1 = (j%3)*(canvas.width-2*cmar)/3+cmar;
+                //         var y1 =  Math.floor(j/3)*(canvas.height-2*cmar)/7+cmar;
+        
+                //         draw_card1(list_card21_img[j],{"x1":x1,"y1":y1}); // 1枚描画する        
+                //     }
+    
+                // }
+    
+                // this.removeEventListener("load",arguments.callee); // ついでにイベントリスナーを削除
+            // },false);
+
+    // console.log("draw_card3x7");
+
+    // for (let i=0;i<21;i++){
+    //     console.log(`draw_card3x7, list_card21_img[${i}] = ${list_card21_img[i]}`);
+    // }
+
+    // console.log(`draw_card3x7!, ${list_card21_img}`);
+
+    // console.log(`nloaded = ${nloaded}`);
+
+
+
+// .then(f.bind(this,{"a":a}))
+    // const list_number = [...Array(40).keys()]; // 0-39の40個の数字
+
+    // console.log(list_card40);
+
+    // list_card21 = Array(21); // 21枚のカードのリスト
+    // list_card21_img = Array(21); // 21枚のカードの画像
+    // console.log(`${list_card40.length}`,c);
+
+    // list_card21.push(c); // 21枚の方に追加
+        // var c=list_card40.splice(r,1); // 1枚ランダムに取り出す
+        // list_card21[t] = c; // 21枚の方に追加
+
+    // for (let i=0;i<40;i++){
+    //     console.log(`choose21from40!, ${list_card40_img[i]}`);
+    // }
+
+
+                        // img.src = `img/${cname}.gif`;
+                    // console.log(`img = ${img}`);
+
+                    // list_card40_img[ind_c] = img;
+                    // console.log("prep_card40!");
+
+
+    // Promise.resolve()
+    // .then(choose21from40)
+    // .then(show)
+    // .then(draw_card3x7)
+
+    // draw_button3();
+
+// let cabw = 273; // カード（裏面）の画像の幅
+// let cabh = 400; // カード（裏面）の画像の高さ
+
+    // colw = 100; // 1列の幅
+    
+    // console.log(`colw = ${colw}`);
+
+    // cscale = Math.min(canvas.width,canvas.height)/30; // スケール
+
+        // bpos[ind_b]["x2"] = bpos[ind_b]["x1"] + (colw-20);
+
+        // bpos[ind_b]["y2"] = bpos[ind_b]["y1"] + 30;
+
+    // console.log(`pb_start!`);
+    // console.log(`pb_start!, list_card40_img = ${list_card40_img}`);
+
+    // choose21from40();
+
+    // console.log(list_card21_img);
+
+
+            // for (let i=0;i<40;i++){
+    //     console.log(`choose21from40, list_card40_img[${i}].src = ${list_card40_img[i].src}`);
+    // }
+
+        // let list_card40_img_cp = clone(list_card40_img); // これから小さくなってゆくarrayのコピー
+
+        // console.log(`choose21from40, ${list_card40_img.length}`);
+        // console.log(`choose21from40, ${list_card40_img}`);
+        
+        
+
+            // console.log(`list_card40_img_cp.length = ${list_card40_img_cp.length}`);
+
+            // console.log(`choose21from40 r=${r}, ${list_card40_img_cp[r].src}`);
+            
+            // console.log(`cloned!, ${list_card40_img_cp[r].cloneNode(true).src}`);
+
+            // var card=list_card40_img_cp.splice(r,1); // 1枚ランダムに取り出す
+            // list_card21_img[t] = card; // 21枚の方に追加
+
+
+            // console.log(`list_card21_img[${t}] = ${list_card21_img[t]}`)
+            // console.log(`list_card21_img[${t}].src = ${list_card21_img[t].src}`)
+
+            // list_card40_img[r].onload = function(){
+            //     console.log(`choose21from40 in onload, ${list_card40_img[r]}`);
+            //     var card=list_card40_img.splice(r,1); // 1枚ランダムに取り出す
+            //     list_card21_img[t] = card; // 21枚の方に追加
+            // }
+
+
+            // list_card21_img[t] = card; // 21枚の方に追加
+
+
+            // var fname = `img/${c}.gif`; // 画像ファイルのソース
+            
+            
+            // console.log(list_card21_img[t]);
+
+
+            // img.onload = function(){
+            // img.src = fname;
+            // list_card21_img.push(img); // リストに追加    
+            // }
+
+        // for (let i=0;i<21;i++){
+        //     console.log(`choose21from40 end!, ${list_card21_img[i]}`);
+        // }
+
+    // console.log(list_card21_img);
+
+    // setTimeout(100);
+
+    // for (let i=0;i<21;i++){
+    //     console.log(i);
+    // }
+
+    // for (let i=0;i<21;i++){
+    //     setTimeout(100);
+
+    //     console.log(list_card21_img[i]);
+    //     context.drawImage(list_card21_img[i],i*100,i*100,50,50*list_card21_img[i].height/list_card21_img[i].width);
+    // }
+
+
+
+    // return
+// }
+
+    // console.log(`sort21! phase = ${phase}, center = ${center}`);
+
+            // console.log(`sort21! i = ${i}`);
+            // console.log(`sort21! nc = ${nc}`);
+            // console.log(`sort21! row = ${row}`);
+            // console.log(`sort21! col = ${col}`);
+
+
+
+            // if (col==nc[0]){ // 前に持ってくる
+            //     // tmp[3*row+0] = clone(list_card21_img[i]);
+            //     tmp[3*row+0] = list_card21_img[i];
+            // }
+            // else if (col==center){ // 真ん中に持ってくる
+            //     // tmp[3*row+1] = clone(list_card21_img[i]);    
+            //     tmp[3*row+1] = list_card21_img[i];                    
+            // }
+            // else if (col==nc[1]){ // 後ろに持ってくる
+            //     // tmp[3*row+2] = clone(list_card21_img[i]);
+            //     tmp[3*row+2] = list_card21_img[i];    
+            // }
+
+            // nrow*3+ncol
+
+        // console.log(`sorted! tmp = ${tmp}`);
+
+        for (let p=0;p<21;p++){
+            console.log(`sorted, list_card21_img[${p}].src = ${list_card21_img[p].src}`)
+        }
+
+        // console.log(`sorted! list_card21_img = ${list_card21_img}`);
+
+
+    // var x1 = (j%3)*(canvas.width-2*cmar)/3+cmar;
+    // var y1 =  Math.floor(j/3)*(canvas.height-2*cmar)/7+cmar;
+
+    
+    // var img = new Image(); // 画像オブジェクト
+    // img.src = "img/back.gif";
+
+    // console.log(`draw_card1, card_img = ${card_img.src}`);
+
+    // console.log(`draw_card1, img = ${img.src}`);
+
+    
+    // context.drawImage(card_img,pos["x1"],pos["y1"],cscale*caw,cscale*cah);
+
+    // list_card21_img[t].onload = function(){
+    //     // var x = Math.random()*(canvas.width-2*cmar)+cmar;
+    //     var x = (t%3)*(canvas.width-2*cmar)/3+cmar;
+    
+    //     var y = Math.floor(t/3)*(canvas.height-2*cmar)/7+cmar;
+        
+    //     // var y = Math.random()*(canvas.height-2*cmar)+cmar;
+        
+    // }
+
+
+    // console.log(`draw_card3x7!, phase = ${phase}`);
+
+    // console.log(`x1, y1, x2, y2 = ${x1}, ${y1}, ${x2}, ${y2}`)
+
+    // context.fillStyle = "green"; // 背景色
+
+    // context.fillStyle = "green"; // 背景色
+    // context.fillRect(1,1,200,200); // 長方形    
+    // context.fillRect(20, 1080, 100, 1180); // 長方形    
+
+    // console.log("when_mover!");
+
+    // canvas.addEventListener("mousemove",when_mmove,false);
+
+    // for (let ind_b=0;ind_b<3;ind_b++){
+    //     if ((bpos[ind_b]["x1"]<=e.offsetX)&&
+    //     (bpos[ind_b]["x2"]>e.offsetX)&&
+    //     (bpos[ind_b]["y1"]<=e.offsetY)&&
+    //     (bpos[ind_b]["y2"]>e.offsetY)){
+    //         console.log(`button ${ind_b+1} mouseover!`);
+    //     }
+    // }
+
+    // console.log("when_mmove!");
+    // onbn=null; // とりあえず今のボタン番号は初期化
+
+            // console.log(`button ${ind_b+1} mouseover!`);
+
+                    // console.log("clear canvas!");
+
+                    // console.log("clear canvas!");
+
+function show(){
+    // 適当にshowする関数
+
+    for (let i=0;i<40;i++){
+        console.log(`show!, ${list_card40_img[i]}`);
+    }
+}
+
+
+
+// promiseの雛形
+// return new Promise(function(resolve,reject){
+
+//     resolve();
+// })
+

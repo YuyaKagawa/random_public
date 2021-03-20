@@ -4,28 +4,47 @@
         <meta charset="UTF-8">
         <link rel="shortcut icon" href="#">
         <title>21 トランプマジック</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
         <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script type="text/javascript" src="function.js"></script>
         <script type="text/javascript" src="main.js"></script>        
     </head>
     <body>
+        <header>
+            <div>
+                <h1>あなたの選んだカードを当てます！</h1>
+                <h2>あそびかた</h2>
+                このゲームは5つのフェーズから成り立ちます。<br>
+                フェーズ0: 21枚のカードの中から、1枚を選択します。<mark class="red">このカードを覚えておいてください。</mark><br>
+                フェーズ1: 21枚のカードを3つの列に分けますので、どの列に覚えたカードがあるかをボタンで選んでください。<br>
+                フェーズ2: フェーズ1と同じことをしてください。<br>
+                フェーズ3: フェーズ1、2と同じことをしてください。<br>
+                フェーズ4: あなたが選んだカードを当てます！
+            </div>
+            <hr>
+        </header>
+
         <div>
             <canvas id="canvas" width=600 height=600></canvas>
         </div>
-        <input type="button" value="start" onclick="pb_start()">
+
+        <input type="button" value="スタート" onclick="pb_start()" id = "b_start">
+        <input type="button" value="リセット" onclick="pb_reset()" id = "b_reset">
+    
+        <hr>
+        <footer>
+            <h2>備考</h2>
+            <ul>
+                <li>このマジックの手順は、「<a href="http://www.cardcoinmagic.com/2012/05/21%E3%82%AB%E3%83%BC%E3%83%89%E3%83%BB%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF/" target="_blank">
+                「21カード・トリック」”21 Card Trick” 本格トランプ手品への入り口となるセルフワーキングトリック | 種明かしだけじゃないマジックの紹介解説◆奇術の詩の子供たち◆
+                </a>」を参照してください。</li>
+                <li>トランプの画像は、
+                「<a href="https://www.civillink.net/fsozai/tramp.html" target="_blank">来夢来人　トランプのフリー素材・イラスト</a>」と、
+                「<a href="https://www.irasutoya.com/2017/05/cardback.html" target="_blank">トランプの裏面のイラスト | かわいいフリー素材集 いらすとや</a>」
+                のものを利用させていただいています。</li>
+            </ul>
+        </footer>
     </body>
-    <hr>
-    <footer>
-        備考: 
-        <ul>
-            <li>このマジックの手順は、「<a href="http://www.cardcoinmagic.com/2012/05/21%E3%82%AB%E3%83%BC%E3%83%89%E3%83%BB%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF/" target="_blank">
-            「21カード・トリック」”21 Card Trick” 本格トランプ手品への入り口となるセルフワーキングトリック | 種明かしだけじゃないマジックの紹介解説◆奇術の詩の子供たち◆
-            </a>」を参照してください。</li>
-            <li>トランプの画像は、
-            「<a href="https://www.civillink.net/fsozai/tramp.html" target="_blank">来夢来人　トランプのフリー素材・イラスト</a>」と、
-            「<a href="https://www.irasutoya.com/2017/05/cardback.html" target="_blank">トランプの裏面のイラスト | かわいいフリー素材集 いらすとや</a>」
-            のものを利用させていただいています。</li>
-        </ul>
-    </footer>
+
 
 </html>

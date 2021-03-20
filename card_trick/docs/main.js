@@ -4,15 +4,13 @@ let context = null;
 let cmar = null; // canvasのマージン
 let colw = null; // 1列の幅
 
-let bpos = Array(3); // 3つのボタンの位置の配列、[x1,y1,x2,y2]
+let bpos = [{},{},{}]; // 3つのボタンの位置の配列、[x1,y1,x2,y2]
 
 let cpos = Array(21); // 21枚のカードの位置
 
 let cscale = null; // カードの画像のスケール、0-1
 let caw = 108; // カードの画像の幅
 let cah = 172; // カードの画像の高さ
-// let cabw = 273; // カード（裏面）の画像の幅
-// let cabh = 400; // カード（裏面）の画像の高さ
 
 const Suit = ["s","h","d","c"]; // トランプのスート
 
@@ -22,154 +20,99 @@ let list_card40_img = Array(40); // 「スーツ+数字」で表された40枚�
 let list_card21 = Array(21); // 「スーツ+数字」で表された21枚のトランプのリスト、40枚の中から選ばれたものたち
 let list_card21_img = Array(21); // 上の21枚のトランプの画像オブジェクトのリスト
 
+
+let flag_monb = null; // カーソルがボタン上にあるというフラグ
+let onbn = null; // 現在カーソルが乗っているボタンの番号
+
+let b_start = null; // スタートボタン
+let b_reset = null; // リセットボタン
+
+let phase = 0; // フェーズ
+
+let fsize_big = null; // フォントサイズ（スタート画面、エンド画面）
+let fsize_small = null; // フォントサイズ（ボタン）
+
+
 $(document).ready(function(){
     // 最初に実行される関数
     // 読み込めてから変数を用意
+
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
     
     cmar = Math.min(canvas.width,canvas.height)/30; // マージン
-    colw = (canvas.width-2*cmar)/3-2*cmar; // 1列の幅
-    // cscale = Math.min(canvas.width,canvas.height)/30; // スケール
-    cscale = 0.1; // スケール
-})
+    colw = (canvas.width-2*cmar)/3; // 1列の幅
+    cscale = 0.5; // スケール
 
-function choose_random(){
-    // 今回のタスクでは、数字は全部で40個、この中から21個選ばれるのが固定
-    // const list_number = [...Array(40).keys()]; // 0-39の40個の数字
+    fsize_big = canvas.width/20; // フォントのサイズ
 
+    b_start = document.getElementById("b_start");
+    b_reset = document.getElementById("b_reset");
 
-
-    // console.log(list_card40);
-
-    list_card21 = Array(21); // 21枚のカードのリスト
-    list_card21_img = Array(21); // 21枚のカードの画像
-
-    for (let t=0;t<21;t++){
-        const r = Math.floor(Math.random()*list_card40.length);
-        var c=list_card40.splice(r,1); // 1枚ランダムに取り出す
-        // console.log(`${list_card40.length}`,c);
-
-        // list_card21.push(c); // 21枚の方に追加
-        list_card21[t] = c; // 21枚の方に追加
-        
-
-
-        var fname = `img/${c}.gif`; // 画像ファイルのソース
-        
-        
-        console.log(list_card21_img[t]);
-
-        list_card21_img[t].onload = function(){
-            // var x = Math.random()*(canvas.width-2*cmar)+cmar;
-            var x = (t%3)*(canvas.width-2*cmar)/3+cmar;
-
-            var y = Math.floor(t/3)*(canvas.height-2*cmar)/7+cmar;
-            
-            // var y = Math.random()*(canvas.height-2*cmar)+cmar;
-            
-        }
-
-        // img.onload = function(){
-        // img.src = fname;
-        // list_card21_img.push(img); // リストに追加    
-        // }
+    // ボタンの位置の設定
+    for (let ind_b=0;ind_b<3;ind_b++){
+        bpos[ind_b]["x1"] = (ind_b+0.5)*colw+cmar;
+        bpos[ind_b]["y1"] = canvas.height-cmar-30;
+        bpos[ind_b]["x2"] = bpos[ind_b]["x1"] + 30;
+        bpos[ind_b]["y2"] = bpos[ind_b]["y1"] + 20;
     }
 
-    // console.log(list_card21_img);
-
-    // setTimeout(100);
-
-    // for (let i=0;i<21;i++){
-    //     console.log(i);
-    // }
-
-    // for (let i=0;i<21;i++){
-    //     setTimeout(100);
-
-    //     console.log(list_card21_img[i]);
-    //     context.drawImage(list_card21_img[i],i*100,i*100,50,50*list_card21_img[i].height/list_card21_img[i].width);
-    // }
 
 
+    Promise.resolve()
+    .then(prep_card40) // 40枚のカードを用意する
+    .then(show_howto) // 遊び方をcanvas内に表示する
+    .then(function(){
+        return new Promise(function(resolve,reject){
+            b_start.style.display = "inline";
+            resolve();
+        });
+    })
 
-    // return
-}
-
-
-
-
-
-var img = new Image(); // 画像
-img.src = "img/back.gif"; // 画像のソース
-
-
+})
 
 function pb_start(){
     // スタートボタンを押したとき
-    // console.log([...Array(40).keys()]);
 
-    // const list_card21 = choose_random();
-
-    // var colw = (canvas.width-2*cmar)/3; 
-
-    for (let c=0;c<3;c++){ // ボタンの表示
-        var x = (c%3)*colw+cmar;
-        var y = canvas.height-cmar+50;
-        var w = colw-20;
-        var h = 10;
-        // context.fillStyle = "red";
-
-        bpos[c]=[x,y,x+w,y+h];
-
-        // context.font = "50px Comic Sans MS";
-        // context.fillText("ボタン",x,canvas.height);
-        context.fillStyle = "yellow";
-
-        context.strokeRect(x,y,w,h);
-        context.fillRect(x,y,w,h);
-    }
-
-    choose_random();
-
-    res_event();
-    // Math.random()*list_number.length
+    Promise.resolve()
+    .then(clear_canvas)
+    // .then(function(){
+    //     return new Promise(function(resolve,reject){
+    //         resolve();
+    //     });
+    // })
+    .then(show_phase)
+    .then(choose21from40)
+    // .then(show)
+    .then(draw_card3x7)
+    .then(draw_button3)
+    .then(res_event)
     
-    // for (let i=0;i<21;i++){
-    // for (let i=0;i<1;i++){
-    //     console.log(list_card21_img[i]);
-        // context.drawImage(list_card21_img[i],i*100,i*100,50,50*list_card21_img[i].height/list_card21_img[i].width);
-
-    //     let list_img = Array();
-
-        // var img = list_card21_img[i];
-
-        // console.log(`${img}`);
-
-        // context.drawImage(img,i*50,i*50,50,50*img.height/img.width);
-
-    //     var img = new Image(); // 画像
-    //     // img.src = `img/s01.gif`; // 画像のソース
-        
-    //     // console.log(img.src);
-
-    //     img.onload = function(){
-    //         img.src = `img/${list_card21[i]}.gif`; // 画像のソース
-    //     }
-
-
-    //     // console.log(img.height,img.width);
-        
-    //     // img.onload = function(){  
-    //         // img.src = `img/back.gif`; // 画像のソース
-
-    //         // console.log(img.src);
-
-
-    //         // context.drawImage(img,i*100,i*100,50,50*img.height/img.width);
-    //     // }
-    //     // context.drawImage(img,i,i);
-        
-    // }
-    
+    b_start.style.display = "none"; // スタートボタンを非表示
 }
+
+function pb_reset(){
+    // リセットボタンを押したとき
+
+    phase=0; // フェーズをリセット
+
+
+    Promise.resolve()
+    .then(clear_canvas)
+    // .then(
+    //     function (){
+    //         return new Promise(function(resolve,reject){
+    //             context.clearRect(0,0,canvas.width,canvas.height); // キャンバスを初期化
+    //             resolve();
+    //         });
+    //     }
+    // )
+    // .then(show)
+    // .then(draw_card3x7)
+    // .then(draw_button3)
+    // .then(res_event)
+    
+    b_reset.style.display = "none"; // リセットボタンを非表示
+    b_start.style.display = "inline"; // スタートボタンを表示
+}
+

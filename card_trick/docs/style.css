@@ -1,5 +1,10 @@
+mark.red{
+    color: white;
+    background-color: red;
+}
+
 body{
-    text-align: center;
+    text-align: left;
 }
 
 footer{
@@ -9,4 +14,12 @@ footer{
 
 canvas{
     background: #999;
+}
+
+#b_start{
+    display: none;
+}
+
+#b_reset{
+    display: none;
 }
