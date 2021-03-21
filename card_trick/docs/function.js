@@ -193,23 +193,88 @@ function draw_card3x7(){
     });
 }
 
-function draw_button1(n,colorb="green"){
-    // ボタン3個を描画する関数
-    // n: ボタン番号0,1,2
-    // colorb: ボタンの背景色
+// function draw_button1(args={"n":n,"colorb":"green","bpos":bpos}){
+function draw_button1(args=null){
 
-    var x1 = bpos[n]["x1"];
-    var y1 = bpos[n]["y1"];
-    var x2 = bpos[n]["x2"];
-    var y2 = bpos[n]["y2"];
+    // ボタン1個を描画する関数
+    // n: ボタン番号0,1,2を与えるときはこれ
+    // colorb: ボタンの背景色
+    // bpos: 明示的に与えていない場合は元のものを利用
+
+
+    return new Promise(function(resolve,reject){
+
+        if (phase==0 || phase==4){
+            // フェーズ0のとき
+
+            var x1 = bpos0["x1"];
+            var y1 = bpos0["y1"];
+            var x2 = bpos0["x2"];
+            var y2 = bpos0["y2"];
+            var colorb = args["colorb"];
     
-    context.strokeStyle = "black"; // 枠線色
-    context.strokeRect(x1,y1,x2-x1,y2-y1); // 枠線
-    context.fillStyle = colorb; // 背景色
-    context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
-    context.fillStyle = "white"; // テキストの色
-    context.font = "30px serif"; // テキストの文字サイズ
-    context.fillText(`ボタン${n+1}`,x1,y1+10); // テキストを表示
+
+            context.strokeStyle = "black"; // 枠線色
+            context.strokeRect(x1,y1,x2-x1,y2-y1); // 枠線
+            context.fillStyle = colorb; // 背景色
+            context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
+
+            context.textAlign = "center"; // 文字の配置
+            context.fillStyle = "white"; // テキストの色
+            context.font = "30px serif"; // テキストの文字サイズ
+
+            context.fillText("つぎへ",(x1+x2)/2,(y1+y2)/2+10); // テキストを表示    
+        }
+        else if (phase>=1 && phase<4){
+            // フェーズ1-3の場合
+        // var n=args["n"];
+        // var bpos=args["bpos"];
+// if (n!=null){
+
+            // console.log(`bpos[0] = ${bpos[0]["x1"]}`);
+
+            var n = args["n"];
+
+            var x1 = bpos[n]["x1"];
+            var y1 = bpos[n]["y1"];
+            var x2 = bpos[n]["x2"];
+            var y2 = bpos[n]["y2"];
+            var colorb = args["colorb"];
+            
+            context.strokeStyle = "black"; // 枠線色
+            context.strokeRect(x1,y1,x2-x1,y2-y1); // 枠線
+            context.fillStyle = colorb; // 背景色
+            context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
+            context.fillStyle = "white"; // テキストの色
+            context.font = "30px serif"; // テキストの文字サイズ
+            context.textAlign = "center"; // 文字の配置
+            context.fillText(`↑`,(x1+x2)/2,(y1+y2)/2); // テキストを表示    
+        // }
+        // else if (n==null){
+        //     var x1 = bpos["x1"];
+        //     var y1 = bpos["y1"];
+        //     var x2 = bpos["x2"];
+        //     var y2 = bpos["y2"];
+            
+        //     context.strokeStyle = "black"; // 枠線色
+        //     context.strokeRect(x1,y1,x2-x1,y2-y1); // 枠線
+        //     context.fillStyle = colorb; // 背景色
+        //     context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
+        //     context.fillStyle = "white"; // テキストの色
+        //     context.font = "30px serif"; // テキストの文字サイズ
+        //     context.fillText(`ボタン`,x1,y1+10); // テキストを表示    
+        // }
+    
+
+        }
+
+
+    
+
+        
+
+        resolve();
+    });
 }
 
 
@@ -218,7 +283,9 @@ function draw_button3(){
     
     return new Promise(function(resolve,reject){
         for (let n=0;n<3;n++){
-            draw_button1(n);    
+            var args={"n":n,"colorb":"green"}
+
+            draw_button1(args=args);
         }
 
         resolve();
@@ -229,25 +296,40 @@ function draw_button3(){
 function when_click(e){
     // キャンバス内でクリックしたときに実行される関数
 
-    for (let ind_b=0;ind_b<3;ind_b++){
-        if ((bpos[ind_b]["x1"]<=e.offsetX)&&
-        (bpos[ind_b]["x2"]>e.offsetX)&&
-        (bpos[ind_b]["y1"]<=e.offsetY)&&
-        (bpos[ind_b]["y2"]>e.offsetY)){
+    if (phase==0 || phase==4){
+        // フェーズ0とフェーズ4の場合
+        if ((bpos0["x1"]<=e.offsetX)&&
+        (bpos0["x2"]>e.offsetX)&&
+        (bpos0["y1"]<=e.offsetY)&&
+        (bpos0["y2"]>e.offsetY)){
             // console.log(`button ${ind_b+1} clicked!`);
-            pb_choose(ind_b);
+            pb_choose(n=null);
         }
     }
+    else if (phase>=1 && phase<4){
+        // フェーズ1-3の場合
+        for (let ind_b=0;ind_b<3;ind_b++){
+            if ((bpos[ind_b]["x1"]<=e.offsetX)&&
+            (bpos[ind_b]["x2"]>e.offsetX)&&
+            (bpos[ind_b]["y1"]<=e.offsetY)&&
+            (bpos[ind_b]["y2"]>e.offsetY)){
+                // console.log(`button ${ind_b+1} clicked!`);
+                // pb_choose(ind_b);
+                pb_choose(n=ind_b);
+            }
+        }    
+    }
+
 
 }
 
-function when_mover(e){
-    // キャンバス上にマウスカーソルが入ったとき
-    // 新たにマウスの動きを追ってゆく
-    // あと、出たときの動きも追う
+// function when_mover(e){
+//     // キャンバス上にマウスカーソルが入ったとき
+//     // 新たにマウスの動きを追ってゆく
+//     // あと、出たときの動きも追う
 
-    canvas.addEventListener("mouseout",when_mout,false);
-}
+//     canvas.addEventListener("mouseout",when_mout,false);
+// }
 
 function when_mmove(e){
     // マウスオーバーしているとき
@@ -255,30 +337,54 @@ function when_mmove(e){
 
     flag_monb=false; // とりあえずフラグは初期化
 
-    for (let ind_b=0;ind_b<3;ind_b++){
-        if ((bpos[ind_b]["x1"]<=e.offsetX)&&
-        (bpos[ind_b]["x2"]>e.offsetX)&&
-        (bpos[ind_b]["y1"]<=e.offsetY)&&
-        (bpos[ind_b]["y2"]>e.offsetY)){
-            draw_button1(ind_b,colorb="orange");
-            flag_monb=true;
-            onbn = ind_b;
-            canvas.style.cursor = "pointer";
+    if (phase==0 || phase==4){
+        // フェーズ0もしくは4の場合
+
+        if ((bpos0["x1"]<=e.offsetX)&&(bpos0["x2"]>e.offsetX)&&
+            (bpos0["y1"]<=e.offsetY)&&(bpos0["y2"]>e.offsetY)){
+                draw_button1({"colorb":"orange"});
+                flag_monb=true;
+                // onbn = ind_b;
+                canvas.style.cursor = "pointer";
+        }
+        else{
+            draw_button1({"colorb":"green"});
+            onbn = null;
+            canvas.style.cursor = "auto";
+        }
+            
+
+        // if (flag_monb!=true){
+        //     }
+    }
+    else if (phase>=1 && phase<4){
+        // フェーズ1-3の場合
+        for (let ind_b=0;ind_b<3;ind_b++){
+            if ((bpos[ind_b]["x1"]<=e.offsetX)&&
+            (bpos[ind_b]["x2"]>e.offsetX)&&
+            (bpos[ind_b]["y1"]<=e.offsetY)&&
+            (bpos[ind_b]["y2"]>e.offsetY)){
+                draw_button1({"n":ind_b,"colorb":"orange","bpos":bpos});
+                
+                flag_monb=true;
+                onbn = ind_b;
+                canvas.style.cursor = "pointer";
+            }
+        }
+        
+        if (flag_monb!=true && onbn!=null){
+            draw_button1({"n":onbn,"colorb":"green","bpos":bpos});
+            onbn = null;
+            canvas.style.cursor = "auto";
         }
     }
-
-    if (flag_monb!=true && onbn!=null){
-        draw_button1(onbn,colorb="green");
-        onbn = null;
-        canvas.style.cursor = "auto";
-    }
 }
 
-function when_mout(e){
-    // キャンバスからカーソルが出たとき
+// function when_mout(e){
+//     // キャンバスからカーソルが出たとき
 
-    // canvas.removeEventListener("mousemove",when_mmove);
-}
+//     // canvas.removeEventListener("mousemove",when_mmove);
+// }
 
 
 function res_event(){
@@ -286,7 +392,7 @@ function res_event(){
 
     return new Promise(function(resolve,reject){
         canvas.addEventListener("click",when_click,false);
-        canvas.addEventListener("mouseover",when_mover,false);    
+        // canvas.addEventListener("mouseover",when_mover,false);    
         canvas.addEventListener("mousemove",when_mmove,false);    
 
         resolve();
@@ -298,8 +404,8 @@ function rem_event(){
 
     return new Promise(function(resolve,reject){
         canvas.removeEventListener("click",when_click);
-        canvas.removeEventListener("mouseover",when_mover);    
-        canvas.removeEventListener("mouseout",when_mout);
+        // canvas.removeEventListener("mouseover",when_mover);    
+        // canvas.removeEventListener("mouseout",when_mout);
         canvas.removeEventListener("mousemove",when_mmove);
         canvas.style.cursor = "auto"; // カーソルを元の形に
     
@@ -309,58 +415,68 @@ function rem_event(){
 
 function pb_choose(n){
     // n (0,1,2) 番目のボタンを押したときに実行される関数
+    // 最初にphaseをインクリメントする
 
-    phase++; // フェーズを進ませる
+    if (phase==0){
+        phase++; // フェーズを進ませる
 
-    if (phase<3){
+        console.log(`phase ${phase}`);
+
         Promise.resolve()
         .then(rem_event)
         .then(clear_canvas)
         .then(show_phase)
-
-
-        // .then(
-        //     function (){
-        //         return new Promise(function(resolve,reject){
-        //             context.clearRect(0,0,canvas.width,canvas.height); // キャンバスを初期化
-        //             resolve();
-        //         });
-        //     }
-        // )
-        .then(sort21.bind(this,n))
         .then(draw_card3x7)
         .then(draw_button3)
         .then(res_event)
     }
-    else{
+    else if (phase<3){ // フェーズ1-3の場合
+        phase++; // フェーズを進ませる
+
+        console.log(`phase ${phase}!`);
+
+
         Promise.resolve()
         .then(rem_event)
         .then(clear_canvas)
         .then(show_phase)
+        .then(sort21.bind(this,n))
+        .then(draw_card3x7)
+        .then(draw_button3)
+        .then(res_event)
 
+    }
+    else if (phase==3){
+        phase++; // フェーズを進ませる
 
-        // .then(
-        //     function (){
-        //         return new Promise(function(resolve,reject){
-        //             context.clearRect(0,0,canvas.width,canvas.height); // キャンバスを初期化
-        //             resolve();
-        //         });
-        //     }
-        // )
-        .then(
-            function (){
-                return new Promise(function(resolve,reject){
-                    context.fillStyle = "red"; // テキストの色
-                    context.font = "40px serif"; // テキストの文字サイズ
-                    context.fillText(`選んだカードはこれですね！`,80,100); // テキストを表示
+        console.log(`phase ${phase}!!!!`);
 
-                    b_reset.style.display = "inline";
+        Promise.resolve()
+        .then(rem_event)
+        .then(clear_canvas)
+        .then(show_phase)
+        .then(function(){
+            return new Promise(function(resolve,reject){
+                context.fillStyle = "white"; // テキストの色
+                context.font = "40px serif"; // テキストの文字サイズ
+ 
+                // context.font = "30px serif"; // テキストの文字サイズ
+                context.textAlign = "center"; // 文字の配置
 
-                    draw_card1(list_card21_img[9+n],{"x1":canvas.width/2,"y1":canvas.height/2}); // 1枚描画する 
-                    resolve();
-                });
-            }
-        )
+                var text1 = "あなたが選んだカードは";
+                var text2 = "これですね！";
+
+                // 1*caw,1*cah
+
+                context.fillText(text1,canvas.width/2,canvas.height/2-cah/2-40); // テキストを表示
+                context.fillText(text2,canvas.width/2,canvas.height/2+cah/2+40); // テキストを表示
+
+                b_reset.style.display = "inline";
+
+                draw_card1(list_card21_img[9+n],{"x1":canvas.width/2-caw/2,"y1":canvas.height/2-cah/2},scale="big"); // 1枚描画する 
+                resolve();
+            });
+        })
     }
 }
 
