@@ -384,3 +384,105 @@ function show(){
 //     resolve();
 // })
 
+    // bpos[ind_b]["x1"] = (ind_b+0.5)*colw+cmar;
+    // bpos[ind_b]["y1"] = canvas.height-cmar-30;
+
+    // console.log(`${bpos[ind_b]["x1"]}`);
+
+    // var x1 = ;
+    // var y1 =  Math.floor(j/3)*(canvas.height-2*cmar)/7+cmar;
+    // var y1 =  Math.floor(j/3)*
+    
+    // var args = {"n":null,"colorb":"green",
+    // "bpos":{"x1": bpos0["x1"],"y1": bpos0["y1"],"x2": bpos0["x2"],"y2": bpos0["y2"]}};
+
+    // (ind_b+0.5)*colw+cmar;
+    // bpos[ind_b]["y1"] = canvas.height-cmar-30;
+    // bpos[ind_b]["x2"] = bpos[ind_b]["x1"] + 30;
+    // bpos[ind_b]["y2"] = bpos[ind_b]["y1"] + 20;
+
+    // .then(draw_button1)    
+    // .then(draw_button3)
+
+    // .then(
+    //     function (){
+    //         return new Promise(function(resolve,reject){
+    //             context.clearRect(0,0,canvas.width,canvas.height); // キャンバスを初期化
+    //             resolve();
+    //         });
+    //     }
+    // )
+    // .then(show)
+    // .then(draw_card3x7)
+    // .then(draw_button3)
+    // .then(res_event)
+
+        // context.fillStyle = colorb; // 背景色
+        // context.fillRect(0,0,canvas.width,canvas.height); // 長方形    
+
+        // setTimeout(console.log("after this, 10s"),10000);
+
+        // console.log(`choose21from40, list_card21_img = ${list_card21_img}`);
+
+// function draw_button1(args={"n":n,"colorb":"green","bpos":bpos}){
+
+        // var n=args["n"];
+        // var bpos=args["bpos"];
+// if (n!=null){
+
+            // console.log(`bpos[0] = ${bpos[0]["x1"]}`);
+
+        // }
+        // else if (n==null){
+        //     var x1 = bpos["x1"];
+        //     var y1 = bpos["y1"];
+        //     var x2 = bpos["x2"];
+        //     var y2 = bpos["y2"];
+            
+        //     context.strokeStyle = "black"; // 枠線色
+        //     context.strokeRect(x1,y1,x2-x1,y2-y1); // 枠線
+        //     context.fillStyle = colorb; // 背景色
+        //     context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
+        //     context.fillStyle = "white"; // テキストの色
+        //     context.font = "30px serif"; // テキストの文字サイズ
+        //     context.fillText(`ボタン`,x1,y1+10); // テキストを表示    
+        // }
+
+            // console.log(`button ${ind_b+1} clicked!`);
+
+                // console.log(`button ${ind_b+1} clicked!`);
+                // pb_choose(ind_b);
+
+// function when_mover(e){
+//     // キャンバス上にマウスカーソルが入ったとき
+//     // 新たにマウスの動きを追ってゆく
+//     // あと、出たときの動きも追う
+
+//     canvas.addEventListener("mouseout",when_mout,false);
+// }
+
+        // onbn = ind_b;
+
+        // if (flag_monb!=true){
+        //     }
+
+// function when_mout(e){
+//     // キャンバスからカーソルが出たとき
+
+//     // canvas.removeEventListener("mousemove",when_mmove);
+// }
+
+        // canvas.addEventListener("mouseover",when_mover,false);    
+
+        // canvas.removeEventListener("mouseover",when_mover);    
+        // canvas.removeEventListener("mouseout",when_mout);
+
+        // console.log(`phase ${phase}`);
+        // console.log(`phase ${phase}!`);
+
+        // console.log(`phase ${phase}!!!!`);
+
+               // context.font = "30px serif"; // テキストの文字サイズ
+ 
+                // 1*caw,1*cah
+

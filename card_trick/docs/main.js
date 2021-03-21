@@ -57,26 +57,12 @@ $(document).ready(function(){
     bpos0["y2"] = bpos0["y1"]+50;
 
     // フェーズ1-3のボタンの位置の設定
-    for (let ind_b=0;ind_b<3;ind_b++){
-        // bpos[ind_b]["x1"] = (ind_b+0.5)*colw+cmar;
-        
-        bpos[ind_b]["x1"] = ind_b*(canvas.width-6*cmar)/3+2*cmar;
-        
-        // bpos[ind_b]["y1"] = canvas.height-cmar-30;
+    for (let ind_b=0;ind_b<3;ind_b++){        
+        bpos[ind_b]["x1"] = ind_b*(canvas.width-6*cmar)/3+2*cmar;        
         bpos[ind_b]["y1"] = (canvas.height-5*cmar);
-
         bpos[ind_b]["x2"] = bpos[ind_b]["x1"] + colw/2;
         bpos[ind_b]["y2"] = bpos[ind_b]["y1"] + 40;
-
-        // console.log(`${bpos[ind_b]["x1"]}`);
     }
-
-    // var x1 = ;
-    // var y1 =  Math.floor(j/3)*(canvas.height-2*cmar)/7+cmar;
-    // var y1 =  Math.floor(j/3)*
-    
-
-
 
     Promise.resolve()
     .then(prep_card40) // 40枚のカードを用意する
@@ -93,28 +79,14 @@ $(document).ready(function(){
 function pb_start(){
     // スタートボタンを押したとき
 
-    var args = {"n":null,"colorb":"green",
-    "bpos":{"x1": bpos0["x1"],"y1": bpos0["y1"],"x2": bpos0["x2"],"y2": bpos0["y2"]}};
-
-    // (ind_b+0.5)*colw+cmar;
-    // bpos[ind_b]["y1"] = canvas.height-cmar-30;
-    // bpos[ind_b]["x2"] = bpos[ind_b]["x1"] + 30;
-    // bpos[ind_b]["y2"] = bpos[ind_b]["y1"] + 20;
-
-
-
     Promise.resolve()
     .then(clear_canvas)
     .then(show_phase)
     .then(choose21from40)
     .then(draw_card3x7)
     .then(draw_button1.bind(this,{"colorb":"green"}))
-    // .then(draw_button1)
     .then(res_event)
-    
-    
-    // .then(draw_button3)
-    
+        
     b_start.style.display = "none"; // スタートボタンを非表示
 }
 
@@ -123,23 +95,9 @@ function pb_reset(){
 
     phase=0; // フェーズをリセット
 
-
     Promise.resolve()
     .then(clear_canvas)
     .then(show_howto) // 遊び方をcanvas内に表示する
-
-    // .then(
-    //     function (){
-    //         return new Promise(function(resolve,reject){
-    //             context.clearRect(0,0,canvas.width,canvas.height); // キャンバスを初期化
-    //             resolve();
-    //         });
-    //     }
-    // )
-    // .then(show)
-    // .then(draw_card3x7)
-    // .then(draw_button3)
-    // .then(res_event)
     
     b_reset.style.display = "none"; // リセットボタンを非表示
     b_start.style.display = "inline"; // スタートボタンを表示

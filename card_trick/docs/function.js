@@ -25,8 +25,6 @@ function show_howto(){
     // 遊び方をキャンバスに表示する関数
 
     return new Promise(function(resolve,reject){
-        // context.fillStyle = colorb; // 背景色
-        // context.fillRect(0,0,canvas.width,canvas.height); // 長方形    
         context.fillStyle = "white"; // テキストの色
         context.textAlign = "center"; // 文字の配置
         context.font = `${fsize_big}px serif`; // テキストの文字サイズ
@@ -104,11 +102,6 @@ function choose21from40(){
             list_card21_img[t] = list_card40_img_cp[r].cloneNode(true); // 何かこんな感じ？
             list_card40_img_cp.splice(r,1); // 1枚ランダムに取り出す
         }
-
-        // setTimeout(console.log("after this, 10s"),10000);
-
-
-        console.log(`choose21from40, list_card21_img = ${list_card21_img}`);
         resolve();
     })
 }
@@ -193,17 +186,13 @@ function draw_card3x7(){
     });
 }
 
-// function draw_button1(args={"n":n,"colorb":"green","bpos":bpos}){
 function draw_button1(args=null){
-
     // ボタン1個を描画する関数
     // n: ボタン番号0,1,2を与えるときはこれ
     // colorb: ボタンの背景色
     // bpos: 明示的に与えていない場合は元のものを利用
 
-
     return new Promise(function(resolve,reject){
-
         if (phase==0 || phase==4){
             // フェーズ0のとき
 
@@ -227,11 +216,6 @@ function draw_button1(args=null){
         }
         else if (phase>=1 && phase<4){
             // フェーズ1-3の場合
-        // var n=args["n"];
-        // var bpos=args["bpos"];
-// if (n!=null){
-
-            // console.log(`bpos[0] = ${bpos[0]["x1"]}`);
 
             var n = args["n"];
 
@@ -246,37 +230,14 @@ function draw_button1(args=null){
             context.fillStyle = colorb; // 背景色
             context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
             context.fillStyle = "white"; // テキストの色
-            context.font = "30px serif"; // テキストの文字サイズ
+            context.font = "30px serif bold"; // テキストの文字サイズ
             context.textAlign = "center"; // 文字の配置
-            context.fillText(`↑`,(x1+x2)/2,(y1+y2)/2); // テキストを表示    
-        // }
-        // else if (n==null){
-        //     var x1 = bpos["x1"];
-        //     var y1 = bpos["y1"];
-        //     var x2 = bpos["x2"];
-        //     var y2 = bpos["y2"];
-            
-        //     context.strokeStyle = "black"; // 枠線色
-        //     context.strokeRect(x1,y1,x2-x1,y2-y1); // 枠線
-        //     context.fillStyle = colorb; // 背景色
-        //     context.fillRect(x1,y1,x2-x1,y2-y1); // 長方形    
-        //     context.fillStyle = "white"; // テキストの色
-        //     context.font = "30px serif"; // テキストの文字サイズ
-        //     context.fillText(`ボタン`,x1,y1+10); // テキストを表示    
-        // }
-    
-
+            context.fillText(`↑`,(x1+x2)/2,(y1+y2)/2); // テキストを表示
         }
-
-
-    
-
-        
 
         resolve();
     });
 }
-
 
 function draw_button3(){
     // ボタン3個を描画する関数
@@ -302,7 +263,6 @@ function when_click(e){
         (bpos0["x2"]>e.offsetX)&&
         (bpos0["y1"]<=e.offsetY)&&
         (bpos0["y2"]>e.offsetY)){
-            // console.log(`button ${ind_b+1} clicked!`);
             pb_choose(n=null);
         }
     }
@@ -313,23 +273,11 @@ function when_click(e){
             (bpos[ind_b]["x2"]>e.offsetX)&&
             (bpos[ind_b]["y1"]<=e.offsetY)&&
             (bpos[ind_b]["y2"]>e.offsetY)){
-                // console.log(`button ${ind_b+1} clicked!`);
-                // pb_choose(ind_b);
                 pb_choose(n=ind_b);
             }
         }    
     }
-
-
 }
-
-// function when_mover(e){
-//     // キャンバス上にマウスカーソルが入ったとき
-//     // 新たにマウスの動きを追ってゆく
-//     // あと、出たときの動きも追う
-
-//     canvas.addEventListener("mouseout",when_mout,false);
-// }
 
 function when_mmove(e){
     // マウスオーバーしているとき
@@ -344,7 +292,6 @@ function when_mmove(e){
             (bpos0["y1"]<=e.offsetY)&&(bpos0["y2"]>e.offsetY)){
                 draw_button1({"colorb":"orange"});
                 flag_monb=true;
-                // onbn = ind_b;
                 canvas.style.cursor = "pointer";
         }
         else{
@@ -352,10 +299,6 @@ function when_mmove(e){
             onbn = null;
             canvas.style.cursor = "auto";
         }
-            
-
-        // if (flag_monb!=true){
-        //     }
     }
     else if (phase>=1 && phase<4){
         // フェーズ1-3の場合
@@ -380,19 +323,12 @@ function when_mmove(e){
     }
 }
 
-// function when_mout(e){
-//     // キャンバスからカーソルが出たとき
-
-//     // canvas.removeEventListener("mousemove",when_mmove);
-// }
-
 
 function res_event(){
     // イベント登録関数
 
     return new Promise(function(resolve,reject){
         canvas.addEventListener("click",when_click,false);
-        // canvas.addEventListener("mouseover",when_mover,false);    
         canvas.addEventListener("mousemove",when_mmove,false);    
 
         resolve();
@@ -404,8 +340,6 @@ function rem_event(){
 
     return new Promise(function(resolve,reject){
         canvas.removeEventListener("click",when_click);
-        // canvas.removeEventListener("mouseover",when_mover);    
-        // canvas.removeEventListener("mouseout",when_mout);
         canvas.removeEventListener("mousemove",when_mmove);
         canvas.style.cursor = "auto"; // カーソルを元の形に
     
@@ -420,8 +354,6 @@ function pb_choose(n){
     if (phase==0){
         phase++; // フェーズを進ませる
 
-        console.log(`phase ${phase}`);
-
         Promise.resolve()
         .then(rem_event)
         .then(clear_canvas)
@@ -432,9 +364,6 @@ function pb_choose(n){
     }
     else if (phase<3){ // フェーズ1-3の場合
         phase++; // フェーズを進ませる
-
-        console.log(`phase ${phase}!`);
-
 
         Promise.resolve()
         .then(rem_event)
@@ -449,8 +378,6 @@ function pb_choose(n){
     else if (phase==3){
         phase++; // フェーズを進ませる
 
-        console.log(`phase ${phase}!!!!`);
-
         Promise.resolve()
         .then(rem_event)
         .then(clear_canvas)
@@ -459,14 +386,10 @@ function pb_choose(n){
             return new Promise(function(resolve,reject){
                 context.fillStyle = "white"; // テキストの色
                 context.font = "40px serif"; // テキストの文字サイズ
- 
-                // context.font = "30px serif"; // テキストの文字サイズ
                 context.textAlign = "center"; // 文字の配置
 
                 var text1 = "あなたが選んだカードは";
                 var text2 = "これですね！";
-
-                // 1*caw,1*cah
 
                 context.fillText(text1,canvas.width/2,canvas.height/2-cah/2-40); // テキストを表示
                 context.fillText(text2,canvas.width/2,canvas.height/2+cah/2+40); // テキストを表示
@@ -479,4 +402,3 @@ function pb_choose(n){
         })
     }
 }
-
