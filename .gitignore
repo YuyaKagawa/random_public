@@ -1,2 +1,5 @@
+# 京都の気温データはアップロードしない
+kyoto_weather/dataset_kyoto_temp
+
 # 検定のまとめのデータセットはアップロードしない
 /ttest/dataset/*
